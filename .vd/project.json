@@ -1,0 +1,138 @@
+{
+  "dir": "E:\\ApiManager",
+  "dll": {
+    "name": "vendor",
+    "target": "var",
+    "content": [
+      "babel-polyfill",
+      "react",
+      "react-dom",
+      "dva",
+      "axios"
+    ]
+  },
+  "directory": {
+    "development": {
+      "envName": "app",
+      "sprite": "sprite",
+      "component": "components",
+      "container": "routes",
+      "model": "models",
+      "service": "services",
+      "config": "configs",
+      "util": "utils",
+      "style": "less",
+      "data": "json",
+      "test": "__test__",
+      "document": "doc",
+      "source": "src"
+    },
+    "build": {
+      "envName": ".build"
+    },
+    "production": {
+      "envName": "dist",
+      "resource": "resources",
+      "dll": "dll",
+      "javascript": "js",
+      "style": "css",
+      "asset": "images"
+    }
+  },
+  "general": {
+    "publicPath": "",
+    "target": "web",
+    "resolve": {
+      "alias": {
+        "rework": "rework.less/rework.less",
+        "sprite": "sprite.less"
+      },
+      "extensions": [
+        ".web.js",
+        ".js"
+      ],
+      "mainFields": [
+        "browser",
+        "jsnext:main",
+        "main"
+      ]
+    },
+    "externals": {
+      "configs": "configs"
+    },
+    "performance": {
+      "maxAssetSize": 400000,
+      "maxEntrypointSize": 600000
+    }
+  },
+  "compiler": {
+    "css": {
+      "less": {
+        "minimize": true
+      },
+      "postcss": {
+        "autoprefixer": {
+          "browsers": [
+            "last 3 versions",
+            "> 1%"
+          ]
+        }
+      }
+    },
+    "asset": {
+      "image": {
+        "optimizer": {
+          "limit": 10000
+        }
+      },
+      "svg": {
+        "sprite": {
+          "extract": false
+        }
+      }
+    },
+    "html": {
+      "title": "Single Page Application",
+      "description": "description",
+      "keywords": "keywords"
+    }
+  },
+  "theme": {
+    "border-radius-base": "0px",
+    "border-radius-sm": "0px",
+    "primary-color": "#0b87fd"
+  },
+  "debug": {
+    "port": 3000,
+    "sync": false,
+    "browsersync": {
+      "port": 4000,
+      "open": true
+    }
+  },
+  "preview": {
+    "port": 3000
+  },
+  "deploy": {
+    "host": "",
+    "port": "",
+    "token": "",
+    "environment": "Node"
+  },
+  "id": "c5b1bb90-e167-11e7-b52f-2593be94c6e1",
+  "type": "pcNative",
+  "name": "ApiManager",
+  "productName": "api管理软件",
+  "description": "api管理软件",
+  "version": "1.0.0",
+  "compatibility": {
+    "chrome": "latest",
+    "firefox": "latest",
+    "safari": "latest",
+    "ie": "9+"
+  },
+  "routerType": "BrowserRouter",
+  "platform": [
+    "Windows"
+  ]
+}
