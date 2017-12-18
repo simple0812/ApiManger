@@ -26,42 +26,62 @@ export default merge.smart(baseConfig, {
         use: ExtractTextPlugin.extract({
           use: {
             loader: 'css-loader',
-            options: {
-              modules: true,
-              importLoaders: 1,
-              localIdentName: '[name]__[local]__[hash:base64:5]',
-            }
+            // options: {
+            //   modules: true,
+            //   importLoaders: 1,
+            //   localIdentName: '[name]__[local]__[hash:base64:5]',
+            // }
           }
         }),
       },
       {
         test: /\.less$/,
-        use: ExtractTextPlugin.extract({
-          use: [
-            {
-              loader: 'css-loader',
-              options: {
-                modules: true,
-                importLoaders: 1,
-                localIdentName: '[name]__[local]__[hash:base64:5]',
-              }
-            },
-            {
-              loader: 'less-loader',
-              options: {
-                modifyVars: {
-                  'primary-color': '#0b87fd',
-                  'border-radius-base': 0,
-                  'border-radius-sm': 0,
-                  'brand-primary': '#43a5df',
-                  'brand-primary-tap': '#43a5df'
-                }
-              }
-            }
-          ],
-          fallback: 'style-loader',
-        })
+        use: [
+          {
+            loader: 'style-loader'
+          },
+          {
+            loader: 'css-loader',
+            // options: {
+            //   modules: true,
+            //   sourceMap: true,
+            //   importLoaders: 1,
+            //   localIdentName: '[name]__[local]__[hash:base64:5]',
+            // }
+          },
+          {
+            loader: 'less-loader'
+          }
+        ]
       },
+      // {
+      //   test: /\.less$/,
+      //   use: ExtractTextPlugin.extract({
+      //     use: [
+      //       {
+      //         loader: 'css-loader',
+      //         // options: {
+      //         //   modules: true,
+      //         //   importLoaders: 1,
+      //         //   localIdentName: '[name]__[local]__[hash:base64:5]',
+      //         // }
+      //       },
+      //       {
+      //         loader: 'less-loader',
+      //         // options: {
+      //         //   modifyVars: {
+      //         //     'primary-color': '#0b87fd',
+      //         //     'border-radius-base': 0,
+      //         //     'border-radius-sm': 0,
+      //         //     'brand-primary': '#43a5df',
+      //         //     'brand-primary-tap': '#43a5df'
+      //         //   }
+      //         // }
+      //       }
+      //     ],
+      //     fallback: 'style-loader',
+      //   })
+      // },
       // WOFF Font
       {
         test: /\.woff(\?v=\d+\.\d+\.\d+)?$/,

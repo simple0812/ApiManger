@@ -10,7 +10,6 @@ import $ from 'jQuery';
 import DocumentTree from '../DocumentTree/DocumentTree';
 
 const TreeNode = Tree.TreeNode;
-require('./less/index.css');
 
 class Main extends React.Component {
 
