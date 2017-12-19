@@ -2,9 +2,41 @@
     outline: 0;
 }
 
+
+// 定义滚动条start
+/*定义滚动条高宽及背景 高宽分别对应横竖滚动条的尺寸*/  
+::-webkit-scrollbar  
+{  
+    width: 3px;  
+    height: 16px;  
+    background-color: #283444;  
+}  
+  
+/*定义滚动条轨道 内阴影+圆角*/  
+::-webkit-scrollbar-track  
+{  
+    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);  
+    border-radius: 10px;  
+    background-color: #283444;  
+}  
+  
+/*定义滑块 内阴影+圆角*/  
+::-webkit-scrollbar-thumb  
+{  
+    border-radius: 10px;  
+    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,.3);  
+    background-color: #555;  
+}  
+// 定义滚动条end
+
+
 [data-reactroot] {
     height: 100% !important;
 }
+
+.ant-tree {color:#586a6a;}
+.ant-tree span {color:#586a6a;}
+.ant-tree-node-selected span {color:white;}
 
 .main {
     display: flex;
@@ -178,5 +210,42 @@ input::-webkit-input-placeholder {
         color: #b2b2b2;
         margin: 0 auto;
         display: block;
+    }
+}
+
+.project-tree {
+    color: #6a6a6a;
+    .react-contextmenu-wrapper {
+        color: #6a6a6a;
+    }
+    li .ant-tree-node-content-wrapper {
+        width: calc(100%-18px);
+        &:hover {
+            background-color: transparent;
+            .react-contextmenu-wrapper {
+                color: #fff;
+            }
+        }
+    }
+    li .ant-tree-node-content-wrapper.ant-tree-node-selected {
+        background-color: transparent;
+        .react-contextmenu-wrapper {
+            color: #fff;
+        }
+    }
+    .group-item {
+        display: flex;
+        .react-contextmenu-wrapper {
+            flex: 1;
+        }
+        .action {
+            display: none;
+            width: 20px;
+        }
+        &:hover {
+            .action {
+                display: block;
+            }
+        }
     }
 }

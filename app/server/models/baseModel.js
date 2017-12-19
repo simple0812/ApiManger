@@ -23,12 +23,10 @@ export default class BaseModel {
   }
 
   saveX = () => {
-    console.log('instance save xxxx')
     return db.insertAsync({...this.state});
   }
 
   static save(doc) {
-    console.log('static save', this.name)
     return db.insertAsync({...doc, table_name: this.name});
   }
 
@@ -47,7 +45,6 @@ export default class BaseModel {
   static update(conditions, model) {
     conditions = conditions || {};
     var p = {...conditions, table_name: this.name}
-    console.log('update', p, model)
     return db.updateAsync(p, { $set: model }, {});
   }
 }

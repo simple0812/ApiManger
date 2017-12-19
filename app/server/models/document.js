@@ -1,6 +1,6 @@
 var db = require('./db');
 var BaseModel = require('./baseModel');
-
+var Promise = require('bluebird');
 /*
 {
   name: { type: String, required: true }, //文档名称
@@ -17,42 +17,12 @@ export default class Document extends BaseModel {
   constructor(obj) {
     super(obj)
   }
+
+  static removeById(id) {
+    var p = {_id: id, table_name: this.name}
+    return db.removeAsync(p).then(ret => {
+      return db.removeAsync({table_name: 'Api', document_id: id});
+    });
+  } 
 }
-
-// export default class Document {
-//   state : {}
-
-//   constructor(obj) {
-//     if(obj) {
-//         this.payload= {
-//         ...obj,
-//         table_name: this.constructor.name
-//       }  
-//     }
-//   }
-
-//   static save(doc) {
-//     console.log('static save', this.name)
-//     return db.insertAsync({...doc, table_name: this.name});
-//   }
-
-//   static retrieve(conditions) {
-//     conditions = conditions || {};
-//     var p = {...conditions, table_name: this.name}
-//     return db.findAsync(p);
-//   } 
-
-//   static remove(conditions) {
-//     conditions = conditions || {};
-//     var p = {...conditions, table_name: this.name}
-//     return db.removeAsync(p);
-//   } 
-
-//   static update(conditions, model) {
-//     conditions = conditions || {};
-//     var p = {...conditions, table_name: this.name}
-//     console.log('update', p, model)
-//     return db.updateAsync(p, { $set: model }, {});
-//   }
-// }
 

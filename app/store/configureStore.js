@@ -3,7 +3,8 @@ import createSagaMiddleware from 'redux-saga';
 import createHistory from 'history/createHashHistory';
 import { routerMiddleware } from 'react-router-redux';
 import { nprogressMiddleware } from 'redux-nprogress';
-import rootReducer from '../redux/reducers';
+import rootReducer from '../redux/reducers/';
+import rootSaga from '../redux/sagas/';
 
 const history = createHistory();
 

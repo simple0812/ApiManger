@@ -9,7 +9,6 @@ db.loadDatabase(function (err) {
     return console.log('加载数据库失败:' + err.message);
   }
   console.log('加载数据库成功');
-
 });
 
 export default Promise.promisifyAll(db);

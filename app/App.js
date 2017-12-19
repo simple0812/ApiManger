@@ -3,8 +3,9 @@ import { Provider } from 'react-redux';
 import { HashRouter as Router, Route, Switch, withRouter } from 'react-router-dom';
 import createHistory from 'history/createHashHistory';
 import configureStore from './store/configureStore';
-import rootSaga from './redux/sagas';
+import rootSaga from './redux/sagas/';
 import Main from './components/Main';
+import {TestMain} from './components/Main';
 
 
 const store = configureStore();
