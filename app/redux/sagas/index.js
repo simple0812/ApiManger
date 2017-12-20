@@ -1,6 +1,6 @@
 import { takeLatest, takeEvery, select, put, call, fork, take, all } from 'redux-saga/effects';
 import { getDocs, updateDoc, createDoc} from './document';
-import { getApis, updateApi, createApi  } from './api';
+import { getApis, updateApi, createApi, searchApis } from './api';
 import { Api, Document } from '../../server/models/';
 
 
@@ -24,5 +24,6 @@ export default function* rootSaga() {
 
     takeLatest('REQ_UPDATE_DOC', updateDoc),
     takeLatest('REQ_CREATE_DOC', createDoc),
+    takeLatest('REQ_SEARCH_APIS', searchApis),
   ]);
 }

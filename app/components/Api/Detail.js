@@ -1,5 +1,7 @@
 /* eslint-disable global-require */
 import React from 'react';
+import { withRouter, browserHistory } from 'react-router'
+import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import Markdown from '../Markdown';
 import { Tag } from 'antd';
@@ -12,6 +14,14 @@ class Detail extends React.Component {
 
   componentWillReceiveProps(nextProps) {
     
+  }
+
+  componentWillMount() {
+    console.log('componentWillMount', this.props.location);
+  }
+
+  componetWillUpdate() {
+    console.log('componentWillMount', this.props.location);
   }
 
   getVersionStatus = (status) => {
@@ -28,14 +38,18 @@ class Detail extends React.Component {
     return api.name;
   }
   getStatus = (status) => {
+    if(!this.props.api._id) return;
     status = status || 1;
-    console.log('status', status);
-    if (status === 1) return (<span />);// <img src={require('./images/current.png')} alt="current" />;
+    if (status === 1) return <img onClick={() => { this.handleTagClick({ status, name: 'current' }); }} src={require('./images/current.png')} alt="current" />;
     if (status === 2) return <img onClick={() => { this.handleTagClick({ status, name: 'new' }); }} src={require('./images/new.png')} alt="new" />;
     return <img onClick={() => { this.handleTagClick({ status, name: 'deprecated' }); }} src={require('./images/deprecated.png')} alt="deprecated" />;
   }
 
   handleTagClick = (tag) => {
+    console.log('serch', tag)
+    tag.document_id = this.props.api.document_id;
+    this.props.dispatch({type:'REQ_SEARCH_APIS', payload:tag});
+    this.props.history.push('/search/' + (tag.name || ''))
     //this.props.onSelectTag(tag);
   }
 
@@ -52,9 +66,9 @@ class Detail extends React.Component {
         </div>
         {api.tags &&
           <div className="tag">
-            {api.tags.map(tag => (
-              <Tag key={tag.id}>
-                <a href="javascript:void(0)" onClick={() => { this.handleTagClick(tag); }}>{tag.name}</a>
+            {api.tags.map( (tag, index) => (
+              <Tag key={index}>
+                <a href="javascript:void(0)" onClick={() => { this.handleTagClick({name:tag, tag:tag}) }}>{tag}</a>
               </Tag>)
             )}
           </div>
@@ -98,4 +112,12 @@ class Detail extends React.Component {
   }
 }
 
-export default Detail;
+function mapStateToProps(state) {
+  return {
+    docs: state.documents.docs || [],
+    api:state.documents.api || {},
+    parent:state.documents.apiParentNode || {},
+  }
+}
+
+export default withRouter(connect(mapStateToProps)(Detail));

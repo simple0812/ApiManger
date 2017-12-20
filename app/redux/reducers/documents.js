@@ -58,6 +58,28 @@ function documents(state = initialState, action={}) {
     var p = {...state};
     delRecursion(p, action.payload);
     return p;
+  case 'SHOW_DETAIL':
+    console.log('SHOW_DETAIL')
+    var xid = action.payload;
+    var p ={...state }
+    var xApi = _.find(p.docs, each => each._id == xid);
+    var xParent = {};
+
+    if(xApi.parent_id == 0) {
+      xParent = _.find(p.doc, each => each._id == xApi.document_id);
+    } else {
+      xParent =  _.find(p.doc, each => each._id == xApi.parent_id);
+    }
+    p.api = xApi || {};
+    p.apiPrentNode = xParent || {};
+    return p;
+
+  case 'SEARCH_APIS':
+    console.log('SEARCH_APIS', action.payload)
+    var p = {...state };
+    p.apis = [...action.payload];
+
+    return p;
 
   default:
     return state;

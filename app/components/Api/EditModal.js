@@ -32,7 +32,8 @@ class EditModal extends React.Component {
         this.props.form.resetFields();//清空提交的表单 
         console.log(values, this.props.api); 
         values.type = 'api';
-
+        values.tags = values.tags.split(' ').filter(each => each);
+        
         if(this.props.api._id) {
           values._id = this.props.api._id;
           this.props.dispatch({type:'REQ_UPDATE_API', payload: {...this.props.api, ...values}});
@@ -111,11 +112,8 @@ class EditModal extends React.Component {
               {...formItemLayout}
             >
               {getFieldDecorator('tags', {
-                initialValue: api.tags
-              })(
-                <Select mode="tags">
-                  {api && api.tags && api.tags.map( (tag, index) => <Option key={index} value={tag}>{tag}</Option>)}
-                </Select>)}
+                initialValue: (api.tags || []).join(' ')
+              })(<Input />)}
             </FormItem>
             <FormItem
               label="API状态"

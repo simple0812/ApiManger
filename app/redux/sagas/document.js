@@ -15,6 +15,15 @@ function* getDocs(action) {
 
 function* createDoc(action) {
   console.log('saga createDoc==>', action);
+  // let src = action.payload.icon;
+  // if(src) {
+  //   var filename = path.basename(src);
+  //   fs.copyFileSync(src, path.join(process.cwd(), 'assets', filename));
+  //   action.payload.icon = filename;
+  // }
+  
+
+
   var p = yield Document.save(action.payload);
   console.log('createDoc', p);
   var xAction = {

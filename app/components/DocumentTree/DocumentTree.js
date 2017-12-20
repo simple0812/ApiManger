@@ -73,7 +73,6 @@ export default class DocumentTree extends React.Component {
   }
 
   handleMenu = ()=> {
-    console.log('xxxxxx');
   }
   render() {
     return (

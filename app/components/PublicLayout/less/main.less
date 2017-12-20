@@ -1,0 +1,257 @@
+* {
+    outline: 0;
+}
+
+
+// 定义滚动条start
+/*定义滚动条高宽及背景 高宽分别对应横竖滚动条的尺寸*/  
+::-webkit-scrollbar  
+{  
+    width: 3px;  
+    height: 16px;  
+    background-color: #283444;  
+}  
+  
+/*定义滚动条轨道 内阴影+圆角*/  
+::-webkit-scrollbar-track  
+{  
+    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);  
+    border-radius: 10px;  
+    background-color: #283444;  
+}  
+  
+/*定义滑块 内阴影+圆角*/  
+::-webkit-scrollbar-thumb  
+{  
+    border-radius: 10px;  
+    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,.3);  
+    background-color: #555;  
+}  
+// 定义滚动条end
+
+
+[data-reactroot] {
+    height: 100% !important;
+}
+
+.ant-tree {color:#586a6a;}
+.ant-tree span {color:#586a6a;}
+.ant-tree-node-selected span {color:white;}
+
+.main {
+    display: flex;
+    height: 100%;
+    overflow-y: hidden;
+    .siderbar {
+        width: 200px;
+        background-color: rgba(49, 50, 51, 1);
+        display: flex;
+        flex-direction: column;
+        .logo {
+            height: 70px;
+            margin: 20px 0;
+            img {
+                margin: 0 auto;
+                display: block;
+            }
+        }
+        .nav {
+            flex: 1;
+            overflow-y: auto;
+            .search {
+                padding: 0 10px;
+                .ant-input {
+                    background-color: #232324;
+                    border: 0;
+                    border-radius: 5px;
+                    &:focus {
+                        box-shadow: none;
+                    }
+                }
+                input,
+                .ant-input-suffix,
+                input::-webkit-input-placeholder {
+                    color: #696969;
+                }
+            }
+        }
+        .action {
+            height: 40px;
+            border-top: 1px solid #1c1c1d;
+            display: flex;
+            align-items: center;
+            a {
+                flex: 1;
+                color: #b2b2b2;
+                display: block;
+                height: 100%;
+                text-align: center;
+                line-height: 40px;
+                &:hover {
+                    color: #24afff;
+                    background-color: #3b3c3d;
+                }
+            }
+        }
+    }
+    .main-container {
+        flex: 1;
+        background-color: rgba(44, 45, 46, 1);
+        position: relative;
+        overflow-y: auto;
+    }
+    .setting {
+        color: #b2b2b2;
+        margin-top: 10px;
+        .ant-checkbox-group-item {
+            display: block;
+            margin-left: 12px;
+        }
+        .ant-checkbox-wrapper+.ant-checkbox-wrapper {
+            margin-left: 12px;
+        }
+    }
+}
+
+.react-contextmenu {
+    z-index: 999;
+    background-color: #232324;
+    opacity: 0;
+    color: #b2b2b2;
+    border-radius: 5px; // box-shadow: 0px 1px 16px 0 rgba(90, 109, 122, 0.41);
+    padding: 0px 0px;
+    width: 120px;
+    &.react-contextmenu--visible {
+        opacity: 1;
+        pointer-events: auto;
+    }
+    .react-contextmenu-item {
+        line-height: 30px;
+        padding: 0 20px;
+        &:hover {
+            color: #fff;
+            background: #24afff;
+            cursor: pointer;
+        }
+    }
+    .react-contextmenu-item--divider {
+        background: #ebf3fd;
+        height: 1px;
+    }
+    .react-contextmenu-item.react-contextmenu-submenu {
+        padding: 0;
+    }
+    .react-contextmenu-item.react-contextmenu-submenu>.react-contextmenu-item:after {
+        content: "▶";
+        display: inline-block;
+        position: absolute;
+        right: 7px;
+    }
+}
+
+.ant-form-item-label label {
+    color: #b2b2b2;
+}
+
+.ant-form-item {
+    color: #969696;
+}
+
+.ant-input,
+.ant-select,
+.ant-select-selection {
+    background-color: #232324;
+    border: 0;
+    border-radius: 5px;
+    color: #b2b2b2;
+    &:focus {
+        box-shadow: none;
+    }
+}
+
+input,
+textarea,
+.ant-input-suffix,
+input::-webkit-input-placeholder {
+    color: #696969;
+}
+
+.ant-select-selection--multiple .ant-select-selection__choice {
+    background-color: #2c2d2e;
+    color: #b2b2b2;
+}
+
+.ant-select-selection__choice__remove {
+    color: #b2b2b2;
+}
+
+.ant-modal-header {
+    background-color: #313233;
+    color: #b2b2b2;
+    border: 0;
+}
+
+.ant-modal-close {
+    background-color: #c85050;
+    color: #fff;
+}
+
+.ant-modal-title {
+    color: #b2b2b2;
+    text-align: center;
+}
+
+.ant-modal-body {
+    background-color: #2c2d2e;
+    .save {
+        height: 24px;
+        background-color: #4e4f51;
+        border-color: #4e4f51;
+        color: #b2b2b2;
+        margin: 0 auto;
+        display: block;
+    }
+}
+
+.project-tree {
+    color: #6a6a6a;
+    .react-contextmenu-wrapper {
+        color: #6a6a6a;
+    }
+    li .ant-tree-node-content-wrapper {
+        width: calc(100%-18px);
+        &:hover {
+            background-color: transparent;
+            .react-contextmenu-wrapper {
+                color: #fff;
+            }
+        }
+    }
+    li .ant-tree-node-content-wrapper.ant-tree-node-selected {
+        background-color: transparent;
+        .react-contextmenu-wrapper {
+            color: #fff;
+        }
+    }
+    .group-item {
+        display: flex;
+        .react-contextmenu-wrapper {
+            flex: 1;
+        }
+        .action {
+            display: none;
+            width: 20px;
+        }
+        &:hover {
+            .action {
+                display: block;
+            }
+        }
+    }
+}
+
+#doc_icon {
+    float:right;
+    margin-left:10px;
+    width: 30px; height:30px;
+}
