@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import { Modal, Input, Form, Button, Upload, Icon } from 'antd';
 var path = require('path');
 var fs = require('fs');
+const uuidv1 = require('uuid/v1');
 import $ from 'jquery';
 
 const FormItem = Form.Item;
@@ -29,15 +30,20 @@ class DocumentModal extends React.Component {
     e.preventDefault();  
     this.props.form.validateFieldsAndScroll((err,values)=>{  
       if(!err){  
-       this.props.onClose();
+        this.props.onClose();
         this.props.form.resetFields();//清空提交的表单 
         console.log(values, this.props.doc._id); 
-        let src = $('#doc_icon').attr('src');
+        //let src = $('#doc_icon').attr('src');
+        let src = values.icon;
+        console.log('src', src);
         if(src) {
-          var filename = path.basename(src);
-          values.icon = filename;
+          var filename = uuidv1() + path.extname(src);
+          values.icon =  filename;
 
           var readStream = fs.createReadStream(src);
+          if(!fs.existsSync(path.join(process.cwd(), 'assets')))
+            fs.mkdirSync(path.join(process.cwd(), 'assets'))
+
           var writeStream = fs.createWriteStream(path.join(process.cwd(), 'assets', filename));
           readStream.pipe(writeStream);
         }
@@ -55,11 +61,37 @@ class DocumentModal extends React.Component {
   } 
 
   handleSelectIcon = (evt) => {
-    if(evt.file.path) {
-      $('#doc_icon').attr('src', evt.file.path).show();
+    // if(evt.file.path) {
+    //   $('#doc_icon').attr('src', evt.file.path).show();
+    // } else {
+    //   $('#doc_icon').attr('src', '').hide();
+    // }
+  }
+
+  handleClose = () => {
+    $('#doc_icon').attr('src', '').hide();
+    this.props.onClose();
+    this.props.form.resetFields();//清空提交的表单 
+    this.setState({});
+  }
+
+  normFile = (e) => {
+    console.log('normFile', this.props.form)
+    // if (Array.isArray(e)) {
+    //   return e;
+    // }
+    // this.props.form.setFieldsValue({icon: e.file.path})
+    if(e.file.path) {
+      $('#doc_icon').attr('src', e.file.path).show();
     } else {
       $('#doc_icon').attr('src', '').hide();
     }
+
+    return e && e.file && e.file.path;
+  }
+
+  handlexxx = (evt) => {
+    console.log('handlexxx', evt);
   }
 
   render() {
@@ -81,7 +113,7 @@ class DocumentModal extends React.Component {
           title={doc._id ? '编辑文档' : '创建文档'}
           visible={this.props.visible}
           onOk={this.handleSubmit}
-          onCancel={this.props.onClose}
+          onCancel={this.handleClose}
         >
           <Form onSubmit={this.handleSubmit}>
             <FormItem
@@ -115,15 +147,28 @@ class DocumentModal extends React.Component {
               label="图标"
               {...formItemLayout}
             >
-              <Upload {...this.uploadProps} onChange={this.handleSelectIcon}>
+             {getFieldDecorator('icon', {
+                valuePropName: 'file',
+                getValueFromEvent: this.normFile,
+                normalize: this.normalizeAll,
+                rules: [{
+                  validator:(rule, value, cb) => {
+                  return cb();} 
+                }],
+                initialValue:  doc.icon || '',
+
+              })(<Upload {...this.uploadProps}>
                 <div>
                   <Button>
                     <Icon type="upload" /> Upload
                   </Button>
-                  <img src={doc.icon && path.join(process.cwd(), 'assets', doc.icon)} 
+                  {
+                   <img src={ doc.icon && path.join(process.cwd(), 'assets', doc.icon)} 
                     style={{display: doc.icon? 'inline-block' : 'none'}} id='doc_icon' />
+                  }
+                  
                 </div>
-              </Upload>
+              </Upload>)}
             </FormItem>
           </Form>
         </Modal>
