@@ -10,10 +10,18 @@ export default class DocumentTree extends React.Component {
     super(props);
   }
 
+  getName = (api, parent) => {
+    parent = parent || {};
+    if (api.object_type === 1) return `${api.name}()`;
+    if (api.object_type === 2) return `${parent.name}.${api.name}()`;
+    if (api.object_type === 4) return `${parent.name}.${api.name}`;
+    if (api.object_type === 5) return `${api.name}{}`;
+    return api.name;
+  }
 
   renderTreeNodes = (data, parent) => {
-    //let sortNodes = _.sortBy(item.children, each => each.type == 'group'? 0 : 1);
     parent = parent || {};
+    //渲染第一层menu(document)
     if(!parent._id) {
       var cNodes = data.filter(each => each.table_name == 'Document');
 
@@ -21,9 +29,8 @@ export default class DocumentTree extends React.Component {
       return cNodes.map((item) => {
         return <TreeNode   
           isLeaf={item.type == 'api'} 
-          title={this.wrapperWithMenuTrigger(item)} 
+          title={this.wrapperWithMenuTrigger(item, parent)} 
           key={item._id} 
-
           dataRef={item} >
             {this.renderTreeNodes(data, item)}
         </TreeNode>;
@@ -45,7 +52,7 @@ export default class DocumentTree extends React.Component {
       return (
         <TreeNode onContextMenu={this.handleMenu} 
           isLeaf={item.type == 'api'} 
-          title={this.wrapperWithMenuTrigger(item)} 
+          title={this.wrapperWithMenuTrigger(item, parent)} 
           parent = {parent}
           key={item._id} 
           dataRef={item}>
@@ -55,7 +62,7 @@ export default class DocumentTree extends React.Component {
     });
   }
 
-  wrapperWithMenuTrigger = (item) => (
+  wrapperWithMenuTrigger = (item, parent) => (
     <ContextMenuTrigger
       id="PROJECT_MENU"
       onItemClick={this.handleMenuClick}
@@ -64,7 +71,7 @@ export default class DocumentTree extends React.Component {
       item={item}
       collect={(props) => (props)}
     >
-      {item.showName || item.name}<span style={{ color: '#47494a', float: 'right' }}>{item.version}</span>
+      {this.getName(item, parent)}<span style={{ color: '#47494a', float: 'right' }}>{item.version}</span>
     </ContextMenuTrigger>
   );
 

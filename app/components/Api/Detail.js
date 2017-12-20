@@ -61,7 +61,7 @@ class Detail extends React.Component {
       <div className="api-detail">
         <div className="header label">
           <div className="header-content">
-            <span>{api.name}</span>
+            <span>{this.getName(api, parent)}</span>
             <span className="tip">{this.getStatus(api.status)}</span>
           </div>
         </div>
