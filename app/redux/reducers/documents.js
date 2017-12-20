@@ -15,6 +15,20 @@ function delRecursion(state, doc) {
     })
   }
 }
+
+function modifySelectedApi(state, xid) {
+  var xApi = _.find(state.docs, each => each._id == xid);
+  var xParent = {};
+
+  if(xApi.parent_id == 0) {
+    xParent = _.find(state.doc, each => each._id == xApi.document_id);
+  } else {
+    xParent =  _.find(state.doc, each => each._id == xApi.parent_id);
+  }
+  state.api = xApi || {};
+  state.apiPrentNode = xParent || {};
+}
+
 function documents(state = initialState, action={}) {
   switch (action.type) {
   case 'GET_DOCES_SUCCESS':
@@ -34,12 +48,16 @@ function documents(state = initialState, action={}) {
     var p = {...state};
     p.docs = _.reject(p.docs, each => each._id == action.payload._id);
     p.docs.push(action.payload);
+    modifySelectedApi(p, action.payload._id);
+
     return p;
     
   case 'CREATE_API_SUCCESS':
     console.log('CREATE_API_SUCCESS', action.payload);
     var p = {...state};
     p.docs =[...p.docs, action.payload];
+    modifySelectedApi(p, action.payload._id);
+
     return p;
 
   case 'UPDATE_DOC_SUCCESS':
@@ -62,16 +80,7 @@ function documents(state = initialState, action={}) {
     console.log('SHOW_DETAIL')
     var xid = action.payload;
     var p ={...state }
-    var xApi = _.find(p.docs, each => each._id == xid);
-    var xParent = {};
-
-    if(xApi.parent_id == 0) {
-      xParent = _.find(p.doc, each => each._id == xApi.document_id);
-    } else {
-      xParent =  _.find(p.doc, each => each._id == xApi.parent_id);
-    }
-    p.api = xApi || {};
-    p.apiPrentNode = xParent || {};
+    modifySelectedApi(p, xid);
     return p;
 
   case 'SEARCH_APIS':
