@@ -25,6 +25,7 @@ class Detail extends React.Component {
   }
 
   getVersionStatus = (status) => {
+    if(!this.props.api._id) return;
     if (status === 1) return <a href="javascript:void(0)" onClick={() => { this.handleTagClick({ version_status: status, name: 'Working Draft' }); }}>Working Draft</a>;
     if (status === 2) return <a href="javascript:void(0)" onClick={() => { this.handleTagClick({ version_status: status, name: 'Candidate Recommendation' }); }}>Candidate Recommendation</a>;
     return <a href="javascript:void(0)" onClick={() => { this.handleTagClick({ version_status: status, name: 'Recommendation' }); }}>Recommendation</a>;
@@ -103,10 +104,13 @@ class Detail extends React.Component {
             </div>
           </div>
         }
-        <div className="version-status">
-          {this.getVersionStatus(api.version_status)}
-          <div className="triangle-up" />
-        </div>
+        {
+          api.version_status &&
+          <div className="version-status">
+            {this.getVersionStatus(api.version_status)}
+            <div className="triangle-up" />
+          </div>
+        }
       </div>
     );
   }

@@ -2,7 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { withRouter, browserHistory } from 'react-router'
 import styles from './less/main.less';
-import { Tree, Icon, Input, message } from 'antd';
+import { Tree, Icon, Input, message, Upload } from 'antd';
 import logo from './images/logo.png'
 
 import Api from '../../server/models/api';
@@ -16,6 +16,12 @@ import EditModal from '../Api/EditModal';
 import GroupModal from '../Api/GroupModal';
 import DocumentModal from '../Document/DocumentModal';
 import LeftNav from '../DocumentTree/LeftNav';
+
+import { importData } from '../../server/utils/common';
+const uuidv1 = require('uuid/v1');
+
+
+
 
 const TreeNode = Tree.TreeNode;
 const Search = Input.Search;
@@ -44,6 +50,16 @@ class Main extends React.Component {
       docModalStatus: false,
       groupModalStatus: false,
     }
+  }
+
+  uploadProps = {
+    name: 'icon',
+    // action: '//jsonplaceholder.typicode.com/posts/',
+    accept:'.db',
+    headers: {
+      //authorization: 'authorization-text',
+    },
+    beforeUpload: () => false,
   }
 
   //加载左侧导航数据
@@ -153,6 +169,12 @@ class Main extends React.Component {
       this.props.history.push(pt)
   }
 
+  handleImport = (evt) => {
+    console.log('import', evt.file.path);
+    importData(evt.file.path);
+  }
+
+
   render() {
     return (
       <div className='main'>
@@ -178,10 +200,15 @@ class Main extends React.Component {
           </div>
           
           <div className='action'>
-            <a href="javascript:void(0)" onClick={() => {this.setState({docModalStatus:true, doc:{}})}} title='add document' ><Icon style={{fontSize:15}} type='save'  /></a>
-            <a href="javascript:void(0)" title='find' ><Icon style={{fontSize:15}} type='export'  /></a>
-            <a href="javascript:void(0)" title='update' ><Icon style={{fontSize:15}} type='edit'  /></a>
-            <a href="javascript:void(0)" title='delete' ><Icon style={{fontSize:15}} type='delete'  /></a>
+            <a href="javascript:void(0)" 
+              onClick={() => {this.setState({docModalStatus:true, doc:{}})}} 
+              title='add document' ><Icon style={{fontSize:15}} type='plus'  />
+            </a>
+            <a href="javascript:void(0)" title='import data' >
+              <Upload {...this.uploadProps} onChange={this.handleImport}>
+                <Icon style={{fontSize:15}} type='download'  />
+              </Upload>
+            </a>
           </div>
         </div>
         <DocumentModal 

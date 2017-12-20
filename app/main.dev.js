@@ -71,6 +71,10 @@ app.on('ready', async () => {
     mainWindow = null;
   });
 
+  mainWindow.on('open', () => {
+    console.log('xxx')
+  });
+
   const menuBuilder = new MenuBuilder(mainWindow);
   menuBuilder.buildMenu();
 });
