@@ -11,3 +11,4 @@
 {"name":"redux","type":"group","parent_id":0,"document_id":"OwfvPwxU7LgwdvaF","table_name":"Api","_id":"no2uWtOy3d1wl83y"}
 {"name":"call","object_type":1,"tags":["react","redux"],"status":2,"code":"call()","version_status":3,"release_status":"release","compatibility":{"chrome":"latest","firefox":"latest","safari":"latest","ie":"9+"},"refer_to":"","type":"api","parent_id":"no2uWtOy3d1wl83y","document_id":"OwfvPwxU7LgwdvaF","table_name":"Api","_id":"tlAtxscIvWsJpuHE"}
 {"name":"css","object_type":1,"tags":["jquery"],"status":2,"code":"css()","version_status":2,"release_status":"beta","compatibility":{"chrome":"latest","firefox":"latest","safari":"latest","ie":"9+"},"refer_to":"","type":"api","parent_id":0,"document_id":"LzE1dHknMCehDNPe","table_name":"Api","_id":"xkjp4uydiV0B2zlg"}
+{"language":"csharp","name":"websocket","version":"3.2","icon":"240b1260-e571-11e7-b9f2-739fdf182d56.png","table_name":"Document","_id":"Tm14TbTXaz8ZPURI"}

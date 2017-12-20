@@ -1,13 +1,14 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import { Modal, Input, Form, Button, Upload, Icon } from 'antd';
+import { Modal, Input, Form, Button, Upload, Icon, Select } from 'antd';
 var path = require('path');
 var fs = require('fs');
 const uuidv1 = require('uuid/v1');
 import $ from 'jquery';
 
 const FormItem = Form.Item;
+const Option = Select.Option;
 
 class DocumentModal extends React.Component {
 
@@ -122,8 +123,21 @@ class DocumentModal extends React.Component {
             >
               {getFieldDecorator('language', {
                 rules: [{ required: true, message: '从属语言必须填写' }],
-                initialValue:  doc.language || ''
-              })(<Input />)}
+                initialValue:  doc.language || 'javascript'
+              })( <Select>
+                    <Option value="javascript">javascript</Option>
+                    <Option value="csharp">csharp</Option>
+                    <Option value="java">java</Option>
+                    <Option value="python">python</Option>
+                    <Option value="php">php</Option>
+                    <Option value="ruby">ruby</Option>
+                    <Option value="objectc">objectc</Option>
+                    <Option value="c">c</Option>
+                    <Option value="c++">c++</Option>
+                    <Option value="golang">golang</Option>
+                    <Option value="rust">rust</Option>
+                    <Option value="swift">swift</Option>
+                  </Select>)}
             </FormItem>
             <FormItem
               label="库名称"
