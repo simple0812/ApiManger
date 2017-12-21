@@ -24,6 +24,9 @@ export default class DocumentTree extends React.Component {
     //渲染第一层menu(document)
     if(!parent._id) {
       var cNodes = data.filter(each => each.table_name == 'Document');
+      if(!this.props.checkable) {
+        cNodes = cNodes.filter(each => !each.hide);
+      }
 
       if(cNodes.length == 0) return;
       return cNodes.map((item) => {
@@ -51,6 +54,7 @@ export default class DocumentTree extends React.Component {
     return cNodes.map((item) => {
       return (
         <TreeNode onContextMenu={this.handleMenu} 
+          disableCheckbox ={true}
           isLeaf={item.type == 'api'} 
           title={this.wrapperWithMenuTrigger(item, parent)} 
           parent = {parent}
@@ -83,7 +87,9 @@ export default class DocumentTree extends React.Component {
   }
   render() {
     return (
-      <Tree checkable={false} loadData={this.props.onLoadData} 
+      <Tree checkable={this.props.checkable} loadData={this.props.onLoadData} 
+        checkedKeys = {this.props.checkedKeys}
+        onCheck = {this.props.onCheck}
         onSelect={this.props.onSelect}
       className="project-tree">
         {this.renderTreeNodes(this.props.treeData)}

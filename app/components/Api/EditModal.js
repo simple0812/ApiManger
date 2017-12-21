@@ -202,7 +202,7 @@ class EditModal extends React.Component {
 
 // export default Form.create()(EditModal);
 function mapStateToProps(state) {
-  console.log('state===>', state);
+  console.log('editmodel state===>', state);
   return {
   }
 }

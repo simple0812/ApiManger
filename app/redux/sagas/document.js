@@ -15,15 +15,6 @@ function* getDocs(action) {
 
 function* createDoc(action) {
   console.log('saga createDoc==>', action);
-  // let src = action.payload.icon;
-  // if(src) {
-  //   var filename = path.basename(src);
-  //   fs.copyFileSync(src, path.join(process.cwd(), 'assets', filename));
-  //   action.payload.icon = filename;
-  // }
-  
-
-
   var p = yield Document.save(action.payload);
   console.log('createDoc', p);
   var xAction = {
@@ -45,4 +36,18 @@ function* updateDoc(action) {
   yield put(xAction);
 }
 
-export {getDocs, createDoc, updateDoc}
+function* setShowableDocs(action) {
+  console.log('saga setShowableDocs==>', action);
+  var p = yield Document.update(
+    {_id: action.payload.key}, 
+    { hide: !action.payload.checked});
+
+  var xAction = {
+    type: 'SET_SHOWABLE_DOC',
+    payload: action.payload
+  }
+
+  yield put(xAction);
+}
+
+export {getDocs, createDoc, updateDoc, setShowableDocs}

@@ -90,6 +90,16 @@ function documents(state = initialState, action={}) {
 
     return p;
 
+case 'SET_SHOWABLE_DOC':
+    var p ={...state }
+
+    var x = p.docs.find(each => each._id == action.payload.key);
+    if(x) {
+      x.hide = !action.payload.checked;
+      console.log('SET_SHOWABLE_DOC', p, x.hide)
+    }
+
+    return p;
   default:
     return state;
   }

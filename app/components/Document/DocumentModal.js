@@ -40,7 +40,8 @@ class DocumentModal extends React.Component {
         //let src = $('#doc_icon').attr('src');
         let src = values.icon;
         console.log('src', src);
-        if(src) {
+
+        if(values.icon.indexOf('/assets/') > -1 || values.icon.indexOf('\\assets\\') > -1) {
           var filename = uuidv1() + path.extname(src);
           values.icon =  filename;
 
@@ -195,7 +196,7 @@ class DocumentModal extends React.Component {
 // export default Form.create()(DocumentModal);
 
 function mapStateToProps(state) {
-  console.log('state===>', state);
+  console.log('document modal state===>', state);
   return {
   }
 }

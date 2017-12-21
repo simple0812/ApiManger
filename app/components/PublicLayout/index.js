@@ -20,9 +20,6 @@ import LeftNav from '../DocumentTree/LeftNav';
 import { importData } from '../../server/utils/common';
 const uuidv1 = require('uuid/v1');
 
-
-
-
 const TreeNode = Tree.TreeNode;
 const Search = Input.Search;
 
@@ -33,6 +30,7 @@ class Main extends React.Component {
   }
 
   componentWillReceiveProps(nextProps) {
+    console.log('nextProps===')
     var currApi = this.state.api || {};
     let nextApi = nextProps.docs.find(each => each._id == this.state.api._id);
     this.setState({
@@ -94,8 +92,6 @@ class Main extends React.Component {
       resolve();
     });
   }
-
-
 
   handleMenuItemClick =(evt, data) => {
     console.log(data);
@@ -174,6 +170,20 @@ class Main extends React.Component {
     importData(evt.file.path);
   }
 
+  customHideDoc = () => {
+    this.setState({
+      checkable: !this.state.checkable
+    })
+  }
+
+  handleChecked = (checkedKeys, evt) => {
+    var payload = {
+      checked: evt.checked,
+      key:evt.node.props.dataRef._id,
+    }
+
+    this.props.dispatch({type:'REQ_SET_SHOWABLE_DOC', payload});
+  }
 
   render() {
     return (
@@ -191,6 +201,10 @@ class Main extends React.Component {
             </div>
             <div>
               <DocumentTree treeData={this.props.docs}
+                ref='docTree'
+                checkedKeys={this.props.checkedKeys}
+                onCheck={this.handleChecked}
+                checkable={this.state.checkable}
                 onMenuItemClick={this.handleMenuItemClick}
                 onSelect={this.handleSelectDoc}
                 onLoadData={this.handleLoadData}>
@@ -208,6 +222,11 @@ class Main extends React.Component {
               <Upload {...this.uploadProps} onChange={this.handleImport}>
                 <Icon style={{fontSize:15}} type='download'  />
               </Upload>
+            </a>
+            <a href="javascript:void(0)" 
+              onClick={this.customHideDoc} 
+              title='add document' >
+              <Icon style={{fontSize:15}} type={this.state.checkable ? 'pushpin' : 'pushpin-o'}  />
             </a>
           </div>
         </div>
@@ -241,8 +260,14 @@ class Main extends React.Component {
 
 // export default Main;
 function mapStateToProps(state) {
+  console.log('layout state =>', state)
+  var keys = _.chain(state.documents.docs || [])
+      .filter(each => each.table_name == 'Document' && !each.hide)
+      .map(each => each._id)
+      .value();
   return {
-    docs: state.documents.docs || []
+    docs: state.documents.docs || [],
+    checkedKeys: keys
   }
 }
 

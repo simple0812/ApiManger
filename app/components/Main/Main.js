@@ -65,7 +65,7 @@ class Main extends React.Component {
 
 // export default Main;
 function mapStateToProps(state) {
-  console.log('state===>', state);
+  console.log('main state===>', state);
   return {
     docs: state.documents.docs || []
   }

@@ -80,7 +80,7 @@ class GroupModal extends React.Component {
 }
 
 function mapStateToProps(state) {
-  console.log('state===>', state);
+  console.log('group modal state===>', state);
   return {
   }
 }
