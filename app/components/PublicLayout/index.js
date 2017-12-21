@@ -94,8 +94,35 @@ class Main extends React.Component {
     });
   }
 
+  decideReqGetApisOrNot = (doc) => {
+    var children = this.props.docs.filter(each => {
+      if(doc.table_name == 'Document') {
+        return each.document_id === doc._id;
+      } else {
+        return each.parent_id === doc._id;
+      }
+    })
+
+    this.manualExpandTreeNode(doc, true);
+    if(children && children.length) {
+      return;
+    }
+
+    var condition ={};
+
+    if(doc.type == 'group') {
+      condition.parent_id = doc._id;
+    } else {
+      condition = {
+        parent_id : 0,
+        document_id: doc._id
+      }
+    } 
+
+    this.props.dispatch({type:'REQ_GET_APIS', payload:condition});
+  }
+
   handleMenuItemClick =(evt, data) => {
-    console.log(data);
     if(!data || !data.item) return;
     switch (data.action) {
     case 'REQ_DEL_ITEM':
@@ -111,9 +138,11 @@ class Main extends React.Component {
       break;
     case 'ADD_API': 
       this.setState({apiModalStatus: true, api: {}, apiParentNode: data.item});
+      this.decideReqGetApisOrNot(data.item);
       break;
     case 'ADD_GROUP': 
       this.setState({groupModalStatus: true,api: {}, apiParentNode: data.item});
+      this.decideReqGetApisOrNot(data.item);
       break;
     default: break;
     }
@@ -139,20 +168,24 @@ class Main extends React.Component {
     })
   }
 
+  manualExpandTreeNode = (doc, isOnlyExpand) => {
+    var currId = doc._id;
+    var xkeys = [...this.state.expandedKeys];
+    if(xkeys.indexOf(currId) == -1) {
+      xkeys.push(currId);
+    } else if(!isOnlyExpand){
+      xkeys = _.without(xkeys, currId);
+    }
+
+    this.setState({
+      expandedKeys: [...xkeys]
+    });
+  }
+
   handleSelectDoc = (key, evt) => {
     console.log('handleSelectDoc', evt.node.props.dataRef);
     if(!evt.node.props.dataRef || evt.node.props.dataRef.type !== 'api') {
-      var currId = evt.node.props.dataRef._id;
-      var xkeys = [...this.state.expandedKeys];
-      if(xkeys.indexOf(currId) == -1) {
-        xkeys.push(currId);
-      } else {
-        xkeys = _.without(xkeys, currId);
-      }
-
-      this.setState({
-        expandedKeys: [...xkeys]
-      });
+      this.manualExpandTreeNode(evt.node.props.dataRef);
       this.handleLoadData(evt.node).then();
       return;
     }
