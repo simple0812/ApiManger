@@ -1,8 +1,9 @@
 import React from 'react';
 import { Tree } from 'antd';
 import { ContextMenuTrigger } from 'react-contextmenu';
-
 import _ from 'lodash';
+var path = require('path');
+
 const TreeNode = Tree.TreeNode;
 
 export default class DocumentTree extends React.Component {
@@ -24,6 +25,7 @@ export default class DocumentTree extends React.Component {
     //渲染第一层menu(document)
     if(!parent._id) {
       var cNodes = data.filter(each => each.table_name == 'Document');
+     //如果不在checkable状态 则不显示隐藏项
       if(!this.props.checkable) {
         cNodes = cNodes.filter(each => !each.hide);
       }
@@ -39,6 +41,11 @@ export default class DocumentTree extends React.Component {
         </TreeNode>;
       });
     } 
+
+    //在checkable状态下 则不显示子项
+    if(this.props.checkable) {
+      return;
+    }
     
     var cNodes =[]
     if(parent.table_name == 'Document')
@@ -75,7 +82,10 @@ export default class DocumentTree extends React.Component {
       item={item}
       collect={(props) => (props)}
     >
-      {this.getName(item, parent)}<span style={{ color: '#47494a', float: 'right' }}>{item.version}</span>
+      {item.icon && <img style= {{width:18,marginRight:5,float:'left'}}
+        src={path.join(process.cwd(), 'assets', item.icon)} />}
+      <span style={{ float:'left'}}>{this.getName(item, parent)}</span>
+      <span style={{ color: '#47494a', float: 'right' }}>{item.version}</span>
     </ContextMenuTrigger>
   );
 

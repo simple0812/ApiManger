@@ -11,6 +11,8 @@ var path = require('path');
   version: { type: String, required: true },// 版本
   icon: { type: String, required: true },// 小图标
   hide: { type: Boolean, required: true, default: false }, //是否展示
+  created_at:{type:Number,}
+  updated_at:{type:Number,}
 }
 */
 

@@ -17,6 +17,8 @@ var BaseModel = require('./baseModel');
   refer_to: String, //参考文献
   compatibility: Object, //浏览器兼容状态
   document_id: { type: string, ref: 'Document' },
+  created_at:{type:Number,}
+  updated_at:{type:Number,}
 }
 */
 export default class Api extends BaseModel {
