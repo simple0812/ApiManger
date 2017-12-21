@@ -17,7 +17,7 @@ function delRecursion(state, doc) {
 }
 
 function modifySelectedApi(state, xid) {
-  var xApi = _.find(state.docs, each => each._id == xid);
+  var xApi = _.find(state.docs, each => each._id == xid) || {};
   var xParent = {};
 
   if(xApi.parent_id == 0) {
@@ -25,7 +25,7 @@ function modifySelectedApi(state, xid) {
   } else {
     xParent =  _.find(state.doc, each => each._id == xApi.parent_id);
   }
-  state.api = xApi || {};
+  state.api = xApi ;
   state.apiPrentNode = xParent || {};
 }
 
