@@ -155,7 +155,11 @@ class DocumentModal extends React.Component {
               {...formItemLayout}
             >
               {getFieldDecorator('version', {
-                rules: [{ required: true, message: '库版本必须填写' }],
+                rules: [{ 
+                  required: true, 
+                  message: '库版本必须填写',
+                  pattern: /^[0-9]+\.[0-9]+\.[0-9]+(\.[0-9]+)?$/,
+                }],
                 initialValue:  doc.version || ''
               })(<Input />)}
             </FormItem>
