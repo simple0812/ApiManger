@@ -86,7 +86,7 @@ function documents(state = initialState, action={}) {
   case 'SEARCH_APIS':
     console.log('SEARCH_APIS', action.payload)
     var p = {...state };
-    p.apis = [...action.payload];
+    p.apis = [...action.payload ];
 
     return p;
 

@@ -33,6 +33,15 @@ class Search extends React.Component {
     var p = _.find(this.props.docs, each => each._id == api.document_id);
     return p ? p.name : '';
   }
+
+  getName = (api, parent) => {
+    parent = parent || {};
+    if (api.object_type === 1) return `${api.name}()`;
+    if (api.object_type === 2) return `${parent.name}.${api.name}()`;
+    if (api.object_type === 4) return `${parent.name}.${api.name}`;
+    if (api.object_type === 5) return `${api.name}{}`;
+    return api.name;
+  }
   
   render() {
     return (
@@ -43,11 +52,13 @@ class Search extends React.Component {
         {this.props.apis.map(item => (
           <div key={item._id} className="item">
             <div className="content">
-              <a href="javascript:;" onClick={this.handleSelectedApi.bind(this, item)}>{item.name}</a>
+              <a href="javascript:;" onClick={this.handleSelectedApi.bind(this, item)}>
+                {this.getName(item, item.parentNode)}
+             </a>
               <span className="tip"><Status status={item.status} /></span>
             </div>
             <div className="category">
-              {this.getDocName(item)}
+              {item.path}
             </div>
           </div>
         ))}
@@ -59,7 +70,7 @@ class Search extends React.Component {
 //export default Search;
 
 function mapStateToProps(state) {
-  var doc = {};
+  console.log('search state ===>', state)
   return {
     apis: state.documents.apis || [],
     docs: state.documents.docs || []

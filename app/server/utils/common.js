@@ -4,6 +4,7 @@ const uuidv1 = require('uuid/v1');
 var Datastore = require('nedb');
 var path = require('path');
 var db = require('../models/db');
+var Api = require('../models/api');
 var Promise = require('bluebird');
 
 function handleImportData(filename) {
@@ -31,6 +32,7 @@ function handleImportData(filename) {
   })
   
 }
+
 
 function importData(src) {
   var filename = uuidv1() + path.extname(src);

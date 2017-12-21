@@ -36,5 +36,50 @@ export default class Api extends BaseModel {
       })
     });
   }
+
+  static findAncestors(parentId, ancestors) {
+    ancestors = ancestors || [];
+    if(parentId == 0) return ancestors;
+    return db.findOneAsync({_id: parentId, table_name: this.name}).then(api => {
+      ancestors.unshift(api);
+
+      if(api.parent_id == 0) {
+        return Promise.resolve(ancestors);
+      }
+
+      return this.findAncestors(api.parent_id, ancestors);
+    });
+  }
+
+  static async findAncestorsIncludeDoc(api) {
+    var doc = await db.findOneAsync({_id: api.document_id, table_name:'Document'});
+    if(!doc) doc ={};
+    var ancors = [];
+    if(api.parent_id) {
+      ancors = await this.findAncestors(api.parent_id);
+    }
+    if(!ancors) ancors = [];
+    ancors.unshift(doc)
+    api.path = ancors.map(each => each.name).join('/');
+    api.parentNode = ancors.pop() || {};
+
+    return api;
+  }
+
+  static async retrieve(conditions) {
+    conditions = conditions || {};
+    var p = {...conditions, table_name: this.name}
+    var apis = await db.findAsync(p);
+
+    return Promise.all(apis.map(each => this.findAncestorsIncludeDoc(each))).then(ret => {
+      return Promise.resolve(ret);
+    })
+
+    //这种方式同样也能获取到数据 但是客户端会出现数据不能绑定的问题 莫名其妙
+    // apis.map(async each => {
+    //   return await this.findAncestorsIncludeDoc(each)
+    // })
+    // return apis;
+  }
 }
 

@@ -99,10 +99,12 @@ export default class DocumentTree extends React.Component {
     return (
       <Tree checkable={this.props.checkable} loadData={this.props.onLoadData} 
         checkedKeys = {this.props.checkedKeys}
+        expandedKeys = {this.props.expandedKeys}
         onCheck = {this.props.onCheck}
+        onExpand={this.props.onExpand}
         onSelect={this.props.onSelect}
-      className="project-tree">
-        {this.renderTreeNodes(this.props.treeData)}
+        className="project-tree">
+          {this.renderTreeNodes(this.props.treeData)}
       </Tree>
     );
   }

@@ -47,6 +47,7 @@ class Main extends React.Component {
       apiModalStatus: false,
       docModalStatus: false,
       groupModalStatus: false,
+      expandedKeys:[],
     }
   }
 
@@ -139,7 +140,7 @@ class Main extends React.Component {
   }
 
   handleSelectDoc = (key, evt) => {
-    console.log('handleSelectDoc', evt.node.props);
+    console.log('handleSelectDoc', evt.node.props.dataRef);
     if(!evt.node.props.dataRef || evt.node.props.dataRef.type !== 'api') return; 
     this.setState({
       apiModalStatus: false,
@@ -185,6 +186,13 @@ class Main extends React.Component {
     this.props.dispatch({type:'REQ_SET_SHOWABLE_DOC', payload});
   }
 
+  handleExpand =(keys, evt) => {
+    console.log('handleExpand', keys, evt)
+    this.setState({
+      expandedKeys:[...keys]
+    })
+  }
+
   render() {
     return (
       <div className='main'>
@@ -206,6 +214,8 @@ class Main extends React.Component {
                 onCheck={this.handleChecked}
                 checkable={this.state.checkable}
                 onMenuItemClick={this.handleMenuItemClick}
+                onExpand={this.handleExpand}
+                expandedKeys={this.state.expandedKeys}
                 onSelect={this.handleSelectDoc}
                 onLoadData={this.handleLoadData}>
               </DocumentTree>
