@@ -17,6 +17,9 @@ class DocumentModal extends React.Component {
     this.state = {};
   }
 
+  componentWillReceiveProps(nextProps, oldProps) {
+  }
+
   uploadProps = {
     name: 'icon',
     // action: '//jsonplaceholder.typicode.com/posts/',
@@ -62,37 +65,35 @@ class DocumentModal extends React.Component {
   } 
 
   handleSelectIcon = (evt) => {
-    // if(evt.file.path) {
-    //   $('#doc_icon').attr('src', evt.file.path).show();
-    // } else {
-    //   $('#doc_icon').attr('src', '').hide();
-    // }
   }
 
   handleClose = () => {
-    $('#doc_icon').attr('src', '').hide();
     this.props.onClose();
+    console.log('handleClose', this.props.form.getFieldsValue())
     this.props.form.resetFields();//清空提交的表单 
-    this.setState({});
   }
 
   normFile = (e) => {
-    console.log('normFile', this.props.form)
-    // if (Array.isArray(e)) {
-    //   return e;
-    // }
-    // this.props.form.setFieldsValue({icon: e.file.path})
-    if(e.file.path) {
-      $('#doc_icon').attr('src', e.file.path).show();
-    } else {
-      $('#doc_icon').attr('src', '').hide();
-    }
-
-    return e && e.file && e.file.path;
+    return e.file ? e.file.path : '';
   }
 
-  handlexxx = (evt) => {
-    console.log('handlexxx', evt);
+  normalizeAll = () => {
+  }
+
+  handelUploadChange =(evt) => {
+    console.log(evt.file.path);
+    this.props.form.setFieldsValue({icon: evt.file.path})
+  }
+
+  renderIcon = () => {
+    let doc = this.props.form.getFieldsValue();
+    if(!doc || !doc.icon) return <span></span>;
+    var pathname = doc.icon;
+    if(doc.icon.indexOf('/assets/') == -1 && doc.icon.indexOf('\\assets\\') == -1) {
+      pathname = path.join(process.cwd(), 'assets', doc.icon)
+    }
+    
+    return <img src={ pathname } id='doc_icon' /> 
   }
 
   render() {
@@ -157,6 +158,7 @@ class DocumentModal extends React.Component {
                 initialValue:  doc.version || ''
               })(<Input />)}
             </FormItem>
+
             <FormItem
               label="图标"
               {...formItemLayout}
@@ -164,25 +166,24 @@ class DocumentModal extends React.Component {
              {getFieldDecorator('icon', {
                 valuePropName: 'file',
                 getValueFromEvent: this.normFile,
-                normalize: this.normalizeAll,
+                //normalize: this.normalizeAll,
                 rules: [{
                   validator:(rule, value, cb) => {
                   return cb();} 
                 }],
                 initialValue:  doc.icon || '',
 
-              })(<Upload {...this.uploadProps}>
+              })(<Upload {...this.uploadProps} onChange={this.handelUploadChange}>
                 <div>
                   <Button>
                     <Icon type="upload" /> Upload
                   </Button>
-                  {
-                   <img src={ doc.icon && path.join(process.cwd(), 'assets', doc.icon)} 
-                    style={{display: doc.icon? 'inline-block' : 'none'}} id='doc_icon' />
-                  }
-                  
+                    {
+                      this.renderIcon()
+                    }
                 </div>
               </Upload>)}
+              
             </FormItem>
           </Form>
         </Modal>

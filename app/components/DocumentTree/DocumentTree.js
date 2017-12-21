@@ -83,7 +83,7 @@ export default class DocumentTree extends React.Component {
   }
   render() {
     return (
-      <Tree loadData={this.props.onLoadData} 
+      <Tree checkable={false} loadData={this.props.onLoadData} 
         onSelect={this.props.onSelect}
       className="project-tree">
         {this.renderTreeNodes(this.props.treeData)}
