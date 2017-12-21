@@ -98,6 +98,7 @@ export default class DocumentTree extends React.Component {
   render() {
     return (
       <Tree checkable={this.props.checkable} loadData={this.props.onLoadData} 
+        autoExpandParent={false}
         checkedKeys = {this.props.checkedKeys}
         expandedKeys = {this.props.expandedKeys}
         onCheck = {this.props.onCheck}

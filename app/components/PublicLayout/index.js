@@ -141,7 +141,22 @@ class Main extends React.Component {
 
   handleSelectDoc = (key, evt) => {
     console.log('handleSelectDoc', evt.node.props.dataRef);
-    if(!evt.node.props.dataRef || evt.node.props.dataRef.type !== 'api') return; 
+    if(!evt.node.props.dataRef || evt.node.props.dataRef.type !== 'api') {
+      var currId = evt.node.props.dataRef._id;
+      var xkeys = [...this.state.expandedKeys];
+      if(xkeys.indexOf(currId) == -1) {
+        xkeys.push(currId);
+      } else {
+        xkeys = _.without(xkeys, currId);
+      }
+
+      this.setState({
+        expandedKeys: [...xkeys]
+      });
+      this.handleLoadData(evt.node).then();
+      return;
+    }
+
     this.setState({
       apiModalStatus: false,
       api: evt.node.props.dataRef,
@@ -188,6 +203,7 @@ class Main extends React.Component {
 
   handleExpand =(keys, evt) => {
     console.log('handleExpand', keys, evt)
+    //evt.node.props.expanded = true;
     this.setState({
       expandedKeys:[...keys]
     })
