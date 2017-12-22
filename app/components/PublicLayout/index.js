@@ -3,8 +3,8 @@ import { connect } from 'react-redux';
 import { withRouter, browserHistory } from 'react-router'
 import { Tree, Icon, Input, message, Upload } from 'antd';
 import $ from 'jQuery';
+const {remote} = require('electron');
 const uuidv1 = require('uuid/v1');
-
 import DocumentTree from '../DocumentTree/DocumentTree';
 import NavMenu from '../DocumentTree/NavMenu';
 import Detail from '../Api/Detail';
@@ -18,7 +18,7 @@ import styles from './less/main.less';
 
 import Api from '../../server/models/api';
 import Document from '../../server/models/document';
-import { importData } from '../../server/utils/common';
+import { importData, exportData } from '../../server/utils/common';
 import {
   Link
 } from 'react-router-dom'
@@ -247,6 +247,22 @@ class Main extends React.Component {
     })
   }
 
+  handleExportData = () => {
+    remote.dialog.showOpenDialog({
+      properties: ['openDirectory']
+    }, (path) => {
+      exportData(path);
+    })
+  }
+
+  handleImportData = () => {
+    remote.dialog.showOpenDialog({
+      properties: ['openDirectory']
+    }, (path) => {
+      importData(path);
+    })
+  }
+
   render() {
     return (
       <div className='main'>
@@ -301,16 +317,13 @@ class Main extends React.Component {
           </div>
           {this.state.more &&
             <div className='action' style={{borderTop:'none'}}>
-              <a href="javascript:void(0)" 
+              <a href="javascript:void(0)" onClick= {this.handleExportData}
                 title='export data' ><Icon style={{fontSize:15}} type='upload'  />
               </a>
-              <a href="javascript:void(0)" title='import data' >
-                <Upload {...this.uploadProps} onChange={this.handleImport}>
-                  <Icon style={{fontSize:15}} type='download'  />
-                </Upload>
+              <a href="javascript:void(0)" title='import data'  onClick= {this.handleImportData}>
+                <Icon style={{fontSize:15}} type='download'  />
               </a>
               <a href="javascript:void(0)" 
-                onClick={this.customHideDoc} 
                 title='' >
               </a>
 

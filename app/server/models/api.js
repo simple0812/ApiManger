@@ -46,13 +46,13 @@ export default class Api extends BaseModel {
     var ret = await xdb.removeAsync(p);
     var apis = await xdb.findAsync({table_name: 'Api', parent_id: id})
     if(!apis || !apis.length) return Promise.resolve();
-    return Promise.all(apis.map(each => this.removeById.call(this, each._id)));
+    // return Promise.all(apis.map(each => this.removeById.call(this, each._id)));
+    return Promise.mapSeries(apis, this.removeById);
   }
 
   static findAncestors(parentId, ancestors, xdb) {
     ancestors = ancestors || [];
     if(parentId == 0) return ancestors;
-    console.log('findAncestors', xdb)
     return xdb.findOneAsync({_id: parentId, table_name: this.name}).then(api => {
       ancestors.unshift(api);
 

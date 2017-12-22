@@ -1,6 +1,6 @@
 /* eslint global-require: 0 */
 
-import { app, BrowserWindow } from 'electron';
+import { app, BrowserWindow, dialog, ipcMain } from 'electron';
 import MenuBuilder from './menu';
 
 let mainWindow = null;
@@ -30,6 +30,8 @@ const installExtensions = async () => {
     .catch(console.log);
 };
 
+ipcMain.on('cache-dbname', (evt, data) => {
+})
 
 /**
  * Add event listeners...
@@ -42,6 +44,10 @@ app.on('window-all-closed', () => {
     app.quit();
   }
 });
+
+app.on('abcd', () => {
+  console.log('abcd')
+})
 
 
 app.on('ready', async () => {
