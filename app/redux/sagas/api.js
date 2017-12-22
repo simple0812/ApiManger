@@ -14,7 +14,11 @@ function* getApis(action) {
 
 function* updateApi(action) {
   console.log('saga updateApi==>', action);
-  var p = yield Api.update({_id:action.payload._id}, action.payload);
+  var condition = {
+    _id:action.payload._id, 
+    document_id: action.payload.document_id
+  };
+  var p = yield Api.update(condition, action.payload);
   console.log('updateApi', p);
   var xAction = {
     type: 'UPDATE_API_SUCCESS',

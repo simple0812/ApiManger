@@ -1,5 +1,4 @@
-var db = require('./db');
-
+import db, { connectDb } from './db';
 /*
 {
   name: { type: String, required: true }, //文档名称
@@ -22,11 +21,13 @@ export default class BaseModel {
     }
   }
 
-  saveX = () => {
+  saveX = (db) => {
     return db.insertAsync({...this.state});
   }
 
   static save(doc) {
+    doc.created_at = ~~(new Date().getTime()/1000);
+    doc.updated_at = doc.created_at;
     return db.insertAsync({...doc, table_name: this.name});
   }
 
@@ -44,6 +45,7 @@ export default class BaseModel {
 
   static update(conditions, model) {
     conditions = conditions || {};
+    model.updated_at = ~~(new Date().getTime()/1000);
     var p = {...conditions, table_name: this.name}
     return db.updateAsync(p, { $set: model }, {});
   }

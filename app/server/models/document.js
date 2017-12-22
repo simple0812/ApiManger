@@ -1,4 +1,4 @@
-var db = require('./db');
+import db, { connectDb } from './db';
 var BaseModel = require('./baseModel');
 var Promise = require('bluebird');
 var fs = require('fs');
@@ -28,15 +28,19 @@ export default class Document extends BaseModel {
     return db.findAsync(p).then( docs => {
       docs.forEach(each => {
         console.log('eac', each)
-        var pathname = path.join(process.cwd(), 'assets', each.icon);
+        var pathname = path.join(process.cwd(), 'assets', each.icon || {});
 
-        if(fs.existsSync(pathname)) {
+        if(each.icon && fs.existsSync(pathname)) {
           fs.unlinkSync(pathname);
         }
       })
 
       return db.removeAsync(p).then(ret => {
-        return db.removeAsync({table_name: 'Api', document_id: id});
+        var dbPath = path.join(process.cwd(), 'data', id +'.db');
+        if(fs.existsSync(dbPath))
+          fs.unlinkSync(dbPath);
+        
+        return Promise.resolve();
       });
     })
   } 
@@ -47,8 +51,6 @@ export default class Document extends BaseModel {
     return db.findAsync(p).then( docs => {
       docs.forEach(each => {
         var pathname = path.join(process.cwd(), 'assets', each.icon);
-        console.log('remove', 'xxxx')
-
         if(fs.existsSync(pathname)) {
           fs.unlinkSync(pathname);
         }

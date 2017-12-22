@@ -6,7 +6,7 @@ import { Api, Document } from '../../server/models/';
 
 function* remoteItem(action) {
   if(action.payload && action.payload.table_name == 'Api') {
-    yield Api.removeById(action.payload._id);
+    yield Api.removeById(action.payload._id, action.payload.document_id);
     yield put({type:'DEL_ITEM', payload:action.payload});
   } else {
     yield Document.removeById(action.payload._id);
