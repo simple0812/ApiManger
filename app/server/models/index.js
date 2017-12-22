@@ -1,5 +1,6 @@
 import Api from './api';
 import Document from './document';
+import Language from './language';
 import db from './db';
 
-export { Api, Document, db };
+export { Language, Api, Document, db };

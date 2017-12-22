@@ -6,18 +6,46 @@ var Promise = require('bluebird');
   1.每个document对应一个db文件 文件名为document_id + '.db', 只保存所有api和分组数据 不包含document数据
   2.data.db为主数据库 保存所有document的数据
 */
-
-var db = new Datastore({ filename: path.join(process.cwd(), 'data', 'data.db') });
 var dbCache ={
-
 }
 
-db.loadDatabase(function (err) {
-  if(err) {
-    return console.log('加载数据库失败:' + err.message);
-  }
+var db = new Datastore({ filename: path.join(process.cwd(), 'data', 'data.db') });
+db = Promise.promisifyAll(db);
+initDb().then(() => {
   console.log('加载数据库成功');
+}).catch(err => {
+  console.log('加载数据库失败:' + err.message);
 });
+
+async function initDb() {
+  var p = await db.loadDatabaseAsync();
+  var langs = await db.findAsync({table_name:'Language'});
+  if(langs && langs.length) {
+    return Promise.resolve();
+  }
+  var arr = [
+    'javascript',
+    'csharp',
+    'java',
+    'python',
+    'php',
+    'ruby',
+    'objectc',
+    'c',
+    'c++',
+    'golang',
+    'rust',
+    'swift',
+  ];
+  var lang = {
+    table_name: 'Language',
+    name: arr.join(' '),
+    created_at: ~~(new Date().getTime() / 1000),
+    updated_at: ~~(new Date().getTime() / 1000)
+  }
+
+  await db.insertAsync(lang);
+}
 
 async function connectDb(dbName) {
   if(dbCache[dbName]) return dbCache[dbName];
@@ -32,5 +60,5 @@ async function connectDb(dbName) {
   return xdb;
 }
 
-export default Promise.promisifyAll(db);
+export default db;
 export { connectDb };

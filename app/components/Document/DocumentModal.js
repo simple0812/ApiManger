@@ -17,6 +17,10 @@ class DocumentModal extends React.Component {
     this.state = {};
   }
 
+  componentWillMount() {
+    this.props.dispatch({type:'REQ_GET_LANGUAGES', payload:{}});
+  }
+
   componentWillReceiveProps(nextProps, oldProps) {
   }
 
@@ -97,6 +101,13 @@ class DocumentModal extends React.Component {
     return <img src={ pathname } id='doc_icon' /> 
   }
 
+  initLangs = ()=> {
+    var lang = this.props.lang;
+    return lang.map((each, index) => {
+        return <Option key={index} value={each}>{each}</Option>
+      })
+  }
+
   render() {
     const { doc } = this.props;
     const { getFieldDecorator } = this.props.form;
@@ -125,20 +136,9 @@ class DocumentModal extends React.Component {
             >
               {getFieldDecorator('language', {
                 rules: [{ required: true, message: '从属语言必须填写' }],
-                initialValue:  doc.language || 'javascript'
+                initialValue:  doc.language || this.props.lang[0] || ''
               })( <Select>
-                    <Option value="javascript">javascript</Option>
-                    <Option value="csharp">csharp</Option>
-                    <Option value="java">java</Option>
-                    <Option value="python">python</Option>
-                    <Option value="php">php</Option>
-                    <Option value="ruby">ruby</Option>
-                    <Option value="objectc">objectc</Option>
-                    <Option value="c">c</Option>
-                    <Option value="c++">c++</Option>
-                    <Option value="golang">golang</Option>
-                    <Option value="rust">rust</Option>
-                    <Option value="swift">swift</Option>
+                    {this.initLangs()}
                   </Select>)}
             </FormItem>
             <FormItem
@@ -201,7 +201,11 @@ class DocumentModal extends React.Component {
 
 function mapStateToProps(state) {
   console.log('document modal state===>', state);
+  var lang = state.languages || {};
+
+
   return {
+    lang: ((lang.name || '').split(' ') || []).filter(each => each)
   }
 }
 

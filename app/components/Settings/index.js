@@ -11,22 +11,26 @@ class Language extends React.Component {
     super(props);
   }
 
+  componentWillMount() {
+    this.props.dispatch({type:'REQ_GET_LANGUAGES', payload:{}});
+  }
+
   handleSubmit = (e) => {
     e.preventDefault();  
     this.props.form.validateFieldsAndScroll((err,values)=>{  
       if(!err){  
-        this.props.onClose();
         this.props.form.resetFields();//清空提交的表单 
-        console.log(values, this.props); 
-        this.props.dispatch({type:'REQ_UPDATE_Language', payload: {...this.props.api, ...values}});
+        var lang = {...this.props.lang }
+        lang.name = values.name;
+        this.props.dispatch({type:'REQ_UPDATE_LANGUAGES', payload: lang});
       }  
-
     });  
   }  
 
   handleClose = () => {  
     this.props.onClose(); 
-  } 
+  }
+  
   render() {
     const { lang } = this.props;
     const { getFieldDecorator } = this.props.form;
@@ -74,9 +78,9 @@ class Language extends React.Component {
 }
 
 function mapStateToProps(state) {
-  console.log('group modal state===>', state);
+  console.log('settings state===>', state);
   return {
-    lang:state.language || {}
+    lang:state.languages || {}
   }
 }
 
