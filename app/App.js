@@ -10,6 +10,7 @@ import Detail from './components/Api/Detail';
 import EditModal from './components/Api/EditModal';
 import {TestMain} from './components/Main';
 import PublicLayout from './components/PublicLayout';
+import Settings from './components/Settings';
 
 
 const store = configureStore();
@@ -32,6 +33,7 @@ export default class App extends Component {
         <Router>
           <Switch>
             <RouteWithLayout exact  layout={PublicLayout} path="/" component={Main}/>
+            <RouteWithLayout exact  layout={PublicLayout} path="/settings" component={Settings}/>
             <RouteWithLayout exact  layout={PublicLayout} path="/search/:name" component={Search}/>
             <RouteWithLayout exact  layout={PublicLayout} path="/detail/:id" component={Detail}/>
             <RouteWithLayout exact  layout={PublicLayout} path="/api/:action/:id" component={EditModal}/>

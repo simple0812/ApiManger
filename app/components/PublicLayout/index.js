@@ -1,13 +1,9 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { withRouter, browserHistory } from 'react-router'
-import styles from './less/main.less';
 import { Tree, Icon, Input, message, Upload } from 'antd';
-import logo from './images/logo.png'
-
-import Api from '../../server/models/api';
-import Document from '../../server/models/document';
 import $ from 'jQuery';
+const uuidv1 = require('uuid/v1');
 
 import DocumentTree from '../DocumentTree/DocumentTree';
 import NavMenu from '../DocumentTree/NavMenu';
@@ -15,16 +11,22 @@ import Detail from '../Api/Detail';
 import EditModal from '../Api/EditModal';
 import GroupModal from '../Api/GroupModal';
 import DocumentModal from '../Document/DocumentModal';
-import LeftNav from '../DocumentTree/LeftNav';
 
+import { add, setting as setIcon, about, back, export as exportIcon, save } from '../Icon';
+import logo from './images/logo.png'
+import styles from './less/main.less';
+
+import Api from '../../server/models/api';
+import Document from '../../server/models/document';
 import { importData } from '../../server/utils/common';
-const uuidv1 = require('uuid/v1');
+import {
+  Link
+} from 'react-router-dom'
 
 const TreeNode = Tree.TreeNode;
 const Search = Input.Search;
 
 class Main extends React.Component {
-
   componentWillMount() {
     this.props.dispatch({type:'REQ_GET_DOCS', payload:{}});
   }
@@ -201,7 +203,10 @@ class Main extends React.Component {
       this.props.history.push(pt);
     this.props.dispatch({
       type:'SHOW_DETAIL', 
-      payload: evt.node.props.dataRef._id
+      payload: {
+        api: evt.node.props.dataRef,
+        parentNode: evt.node.props.parent || {}
+      }
     })
   }
   handleSearch = (val) => {
@@ -277,18 +282,45 @@ class Main extends React.Component {
               onClick={() => {this.setState({docModalStatus:true, doc:{}})}} 
               title='add document' ><Icon style={{fontSize:15}} type='plus'  />
             </a>
-            <a href="javascript:void(0)" title='import data' >
-              <Upload {...this.uploadProps} onChange={this.handleImport}>
-                <Icon style={{fontSize:15}} type='download'  />
-              </Upload>
-            </a>
+            
             <a href="javascript:void(0)" 
               onClick={this.customHideDoc} 
               title='add document' >
               <Icon style={{fontSize:15}} type={this.state.checkable ? 'pushpin' : 'pushpin-o'}  />
             </a>
+
+            <Link to='/settings' title='setting' >
+              <Icon style={{fontSize:15}} type='setting'  />
+            </Link>
+
+            <a href="javascript:void(0)" 
+              onClick={() =>this.setState({more:!this.state.more}) } 
+              title='more' >
+              <img src={about} alt='more' style={{color:'white', height:35, width:20}} />
+            </a>
           </div>
+          {this.state.more &&
+            <div className='action' style={{borderTop:'none'}}>
+              <a href="javascript:void(0)" 
+                title='export data' ><Icon style={{fontSize:15}} type='upload'  />
+              </a>
+              <a href="javascript:void(0)" title='import data' >
+                <Upload {...this.uploadProps} onChange={this.handleImport}>
+                  <Icon style={{fontSize:15}} type='download'  />
+                </Upload>
+              </a>
+              <a href="javascript:void(0)" 
+                onClick={this.customHideDoc} 
+                title='' >
+              </a>
+
+              <a href="javascript:void(0)" 
+                title='' >
+              </a>
+            </div>
+          }
         </div>
+
         <DocumentModal 
           doc={this.state.doc} 
           onClose={this.handleDocClose}

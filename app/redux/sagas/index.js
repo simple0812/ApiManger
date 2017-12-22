@@ -26,5 +26,8 @@ export default function* rootSaga() {
     takeLatest('REQ_CREATE_DOC', createDoc),
     takeLatest('REQ_SEARCH_APIS', searchApis),
     takeLatest('REQ_SET_SHOWABLE_DOC', setShowableDocs),
+
+    takeLatest('REQ_GET_TAGS', updateDoc),
+    takeLatest('REQ_UPDATE_TAGS', createDoc),
   ]);
 }

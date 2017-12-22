@@ -79,8 +79,9 @@ function documents(state = initialState, action={}) {
   case 'SHOW_DETAIL':
     console.log('SHOW_DETAIL')
     var xid = action.payload;
-    var p ={...state }
-    modifySelectedApi(p, xid);
+    var p ={...state, ...action.payload }
+
+    //modifySelectedApi(p, xid);
     return p;
 
   case 'SEARCH_APIS':

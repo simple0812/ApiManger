@@ -25,7 +25,10 @@ class Search extends React.Component {
       this.props.history.push(pt);
     this.props.dispatch({
       type:'SHOW_DETAIL', 
-      payload: item._id
+      payload: {
+        api: item,
+        parentNode: item.parentNode
+      }
     })
   }
 

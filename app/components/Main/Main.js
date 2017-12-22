@@ -1,11 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import styles from './less/main.less';
-import { Tree, Icon, Input, message } from 'antd';
-import logo from './images/logo.png'
 
-import Api from '../../server/models/api';
-import Document from '../../server/models/document';
 import $ from 'jQuery';
 
 import DocumentTree from '../DocumentTree/DocumentTree';
@@ -14,12 +9,14 @@ import Detail from '../Api/Detail';
 import EditModal from '../Api/EditModal';
 import GroupModal from '../Api/GroupModal';
 import DocumentModal from '../Document/DocumentModal';
-import LeftNav from '../DocumentTree/LeftNav';
 
-const TreeNode = Tree.TreeNode;
+import Api from '../../server/models/api';
+import Document from '../../server/models/document';
+
+import styles from './less/main.less';
+import logo from './images/logo.png'
 
 class Main extends React.Component {
-
   componentWillMount() {
     this.props.dispatch({type:'REQ_GET_DOCS', payload:{}});
   }
