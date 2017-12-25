@@ -22,9 +22,12 @@ async function handleImportData(tempInDir) {
     console.log('syncDocs success')
     return Promise.resolve();
   });
-  //await syncApiFiles(tempInDir);
+  await syncApiFiles(tempInDir).then(() => {
+    console.log('syncApis success')
+    return Promise.resolve();
+  });
 
-  fse.emptyDirSync(tempInDir);
+  fse.emptyDirSync(getPathByCWD('tempdir'));
 }
 
 //同步languages
@@ -46,8 +49,6 @@ async function syncLanguage(importDb) {
 async function syncDocs(importDb, tempInDir) {
   console.log('syncDocs.....');
   var importDocs = await importDb.findAsync({table_name:'Document'});
-  //return Promise.all(importDocs.map(each => syncDoc(each, tempInDir)));
-
   return Promise.mapSeries(importDocs, syncDoc.bind(null, tempInDir));
 }
 
@@ -57,8 +58,9 @@ async function syncDoc(tempInDir, importDoc) {
   //如果导入的是新的数据 则直接插入
   if(!currDoc) {
     await db.insertAsync(importDoc);
-    if(importDoc.icon && fse.pathExistsSync(path.join(tempInDir, importDoc.icon)))
-      fse.copySync(path.join(tempInDir, importDoc.icon), getPathByCWD('assets', importDoc.icon))
+    var iconUrl = path.join(tempInDir, 'assets', importDoc.icon);
+    if(importDoc.icon && fse.pathExistsSync(iconUrl))
+      fse.copySync(iconUrl, getPathByCWD('assets', importDoc.icon))
     return Promise.resolve()
   }
 
@@ -69,17 +71,18 @@ async function syncDoc(tempInDir, importDoc) {
       fse.removeSync(getPathByCWD('assets', currDoc.icon))
     }
 
-    if(importDoc.icon ) {
-      fse.copySync(path.join(tempInDir, importDoc.icon), getPathByCWD('assets', importDoc.icon))
+    var iconUrl = path.join(tempInDir, 'assets', importDoc.icon);
+    if(importDoc.icon && fse.pathExistsSync(iconUrl)) {
+      fse.copySync(path.join(iconUrl), getPathByCWD('assets', importDoc.icon))
     }
 
     for(let key in importDoc) {
-      if(each != '_id' && currDoc.hasOwnProperty(key)) {
+      if(key != '_id' && currDoc.hasOwnProperty(key)) {
         currDoc[key] = importDoc[key];
       }
     }
 
-    await db.updateAsync({_id: currDoc._id}, currDoc, {upsert: true});
+    await db.updateAsync({_id: currDoc._id}, {$set: currDoc}, {upsert: true});
     return Promise.resolve();
   }
 }
@@ -124,7 +127,7 @@ async function syncApi(tempInDir, importApi) {
   //如果导入的数据与当前数据库冲突，则通过最后更新时间判断是否插入
   if(currApi.updated_at < importApi.updated_at) {
     for(let key in importApi) {
-      if(each != '_id' && currApi.hasOwnProperty(key)) {
+      if(key != '_id' && currApi.hasOwnProperty(key)) {
         currApi[key] = importApi[key];
       }
     }

@@ -271,7 +271,12 @@ class Main extends React.Component {
     remote.dialog.showOpenDialog({
       properties: ['openDirectory']
     }, (path) => {
-      importData(path);
+      importData(path).then(() => {
+        console.log('import data success')
+        this.props.dispatch({type:'REQ_GET_DOCS', payload:{}});
+      }).catch(err => {
+        console.log('import data error:' + err.message)
+      });
     })
   }
 

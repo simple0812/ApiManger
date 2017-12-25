@@ -46,10 +46,16 @@ function documents(state = initialState, action={}) {
   case 'UPDATE_API_SUCCESS':
     console.log('UPDATE_API_SUCCESS', action.payload._id);
     var p = {...state};
-    p.docs = _.reject(p.docs, each => each._id == action.payload._id);
-    p.docs.push(action.payload);
+    var x = p.docs.find(each => each._id == action.payload._id);
+    if(x) {
+      for(var key in action.payload) {
+        if(x.hasOwnProperty(key)) {
+          x[key] = action.payload[key];
+        }
+      }
+    }
+    
     modifySelectedApi(p, action.payload._id);
-
     return p;
     
   case 'CREATE_API_SUCCESS':
@@ -63,8 +69,18 @@ function documents(state = initialState, action={}) {
   case 'UPDATE_DOC_SUCCESS':
     console.log('UPDATE_DOC_SUCCESS', action.payload._id);
     var p = {...state};
-    p.docs = _.reject(p.docs, each => each._id == action.payload._id);
-    p.docs.push(action.payload);
+
+    var x = p.docs.find(each => each._id == action.payload._id);
+    if(x) {
+      for(var key in action.payload) {
+        if(x.hasOwnProperty(key)) {
+          x[key] = action.payload[key];
+        }
+      }
+    }
+
+    console.log('xxxxxxxxxx', p.docs)
+
     return p;
   case 'CREATE_DOC_SUCCESS':
     console.log('CREATE_DOC_SUCCESS', action.payload);
