@@ -18,7 +18,7 @@ import styles from './less/main.less';
 
 import Api from '../../server/models/api';
 import Document from '../../server/models/document';
-import { importData, exportData } from '../../server/utils/common';
+import { importData, exportData } from '../../server/utils/';
 import {
   Link
 } from 'react-router-dom'
