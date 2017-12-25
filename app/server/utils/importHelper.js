@@ -34,6 +34,10 @@ async function handleImportData(tempInDir) {
 async function syncLanguage(importDb) {
   console.log('syncLanguage.....');
   var importLangs = await importDb.findOneAsync({table_name:'Language'});
+  if(!importLangs) {
+    console.log('Language is emtpy');
+    return Promise.resolve();
+  }
   var currLangs = await db.findOneAsync({table_name:'Language'});
   console.log('importLangs', importLangs._id, currLangs._id);
   importLangs = importLangs || {};

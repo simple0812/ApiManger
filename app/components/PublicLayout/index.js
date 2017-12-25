@@ -335,9 +335,9 @@ class Main extends React.Component {
           {this.state.more &&
             <div className='action' style={{borderTop:'none'}}>
               <a href="javascript:void(0)" onClick= {this.handleExportData}
-                title='export data' ><Icon style={{fontSize:15}} type='upload'  />
+                title='导出数据' ><Icon style={{fontSize:15}} type='upload'  />
               </a>
-              <a href="javascript:void(0)" title='import data'  onClick= {this.handleImportData}>
+              <a href="javascript:void(0)" title='导入数据'  onClick= {this.handleImportData}>
                 <Icon style={{fontSize:15}} type='download'  />
               </a>
               <a href="javascript:void(0)" 
