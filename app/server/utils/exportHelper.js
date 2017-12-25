@@ -10,7 +10,7 @@ import {getPathByCWD} from './common';
 var Promise = require('bluebird');
 var _ = require('lodash');
 
-
+import {zip} from './zipHelper';
 async function exportLanguage(exportDb) {
   console.log('exportLanguage.....');
   var expLangs = await db.findOneAsync({table_name:'Language'});
@@ -40,10 +40,12 @@ async function handleExportData(destDir) {
     console.log('export doc error', err.message);
   });
 
-  // fse.copySync(getPathByCWD('assets'), path.join(tempOutDir, 'assets'));
-  // fse.copySync(getPathByCWD('data'), path.join(tempOutDir, 'data'));
+  await zip(tempOutDir, path.join(destDir, 'apidata.zip')).then(()=> {
+    console.log('abc');
+  }).catch(err => {
+    console.log(err.message);
+  })
 
-  fse.copySync(tempOutDir, path.join(destDir, 'apidata'))
   fse.emptyDirSync(getPathByCWD('tempdir'));
 }
 

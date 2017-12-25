@@ -269,7 +269,7 @@ class Main extends React.Component {
 
   handleImportData = () => {
     remote.dialog.showOpenDialog({
-      properties: ['openDirectory']
+      properties: ['openFile']
     }, (path) => {
       importData(path).then(() => {
         console.log('import data success')

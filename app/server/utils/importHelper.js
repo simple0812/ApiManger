@@ -8,6 +8,7 @@ var Api = require('../models/api');
 import db, { connectDb, connectTempDb } from '../models/db'
 var Promise = require('bluebird');
 var _ = require('lodash');
+var zipper = require('zip-local');
 import {getPathByCWD} from './common';
 
 async function handleImportData(tempInDir) {
@@ -148,11 +149,16 @@ async function importData(src) {
   console.log('import data path', src)
   var tempInDir = getPathByCWD('tempdir', uuidv1()) ;
   await fse.ensureDir(tempInDir);
-  if(fse.pathExistsSync(path.join(src, 'assets')))
-    await fse.copy(path.join(src, 'assets'), path.join(tempInDir, 'assets'));
 
-  if(fse.pathExistsSync(path.join(src, 'data')))
-    await fse.copy(path.join(src, 'data'), path.join(tempInDir, 'data'));
+  zipper.sync.unzip(src).save(tempInDir);
+  await fse.ensureDir(path.join(tempInDir, 'assets'));
+  await fse.ensureDir(path.join(tempInDir, 'data'));
+
+  // if(fse.pathExistsSync(path.join(src, 'assets')))
+  //   await fse.copy(path.join(src, 'assets'), path.join(tempInDir, 'assets'));
+
+  // if(fse.pathExistsSync(path.join(src, 'data')))
+  //   await fse.copy(path.join(src, 'data'), path.join(tempInDir, 'data'));
 
   await handleImportData(tempInDir);
 }
