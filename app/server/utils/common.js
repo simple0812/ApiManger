@@ -11,33 +11,77 @@ var _ = require('lodash');
 import { remote, ipcRenderer } from 'electron';
 
 async function handleImportData(tempInDir) {
-  var pathname = getPathByCWD(tempInDir, 'data', 'data.db');
+  var pathname = path.join(tempInDir, 'data', 'data.db');
+  console.log('handleImportData', pathname);
 
-  var importDb = Promise.promisifyAll(new Datastore({ filename: pathname }));
-  await importDb.loadDatabase();
-  // await syncLanguage(importDb);
-  // await syncDocs(importDb, tempInDir);
-  await syncApiFiles(tempInDir);
+  var x = new Datastore({ filename: pathname});
+  var importDb = Promise.promisifyAll(x)
+  await importDb.loadDatabaseAsync();
+  await syncLanguage(importDb);
+  await syncDocs(importDb, tempInDir).then(() => {
+    console.log('syncDocs success')
+    return Promise.resolve();
+  });
+  //await syncApiFiles(tempInDir);
 
   fse.emptyDirSync(tempInDir);
 }
 
 //同步languages
 async function syncLanguage(importDb) {
+  console.log('syncLanguage.....');
   var importLangs = await importDb.findOneAsync({table_name:'Language'});
   var currLangs = await db.findOneAsync({table_name:'Language'});
+  console.log('importLangs', importLangs._id, currLangs._id);
   importLangs = importLangs || {};
   currLangs = currLangs || {};
   var names = (currLangs.name || '').split(' ').concat((importLangs.name || '').split(' '))
   currLangs.name = _.uniq(names).join(' ');
-  await db.updateAsync({_id:currLangs._id}, currLangs, {upsert:true});
+  var model = {...currLangs};
+  delete model._id;
+  await db.updateAsync({_id:currLangs._id}, {$set:model}, {upsert: false});
+  console.log('syncLanguage success');
 }
 
 async function syncDocs(importDb, tempInDir) {
+  console.log('syncDocs.....');
   var importDocs = await importDb.findAsync({table_name:'Document'});
   //return Promise.all(importDocs.map(each => syncDoc(each, tempInDir)));
 
-  return Promise.mapSeries(importDocs, syncDoc);
+  return Promise.mapSeries(importDocs, syncDoc.bind(null, tempInDir));
+}
+
+async function syncDoc(tempInDir, importDoc) {
+  var currDoc = await db.findOneAsync({_id: importDoc._id});
+  console.log('syncDoc', currDoc, tempInDir);
+  //如果导入的是新的数据 则直接插入
+  if(!currDoc) {
+    await db.insertAsync(importDoc);
+    if(importDoc.icon && fse.pathExistsSync(path.join(tempInDir, importDoc.icon)))
+      fse.copySync(path.join(tempInDir, importDoc.icon), getPathByCWD('assets', importDoc.icon))
+    return Promise.resolve()
+  }
+
+  //如果导入的数据与当前数据库冲突，则通过最后更新时间判断是否插入
+  if(currDoc.updated_at < importDoc.updated_at) {
+
+    if(currDoc.icon) {
+      fse.removeSync(getPathByCWD('assets', currDoc.icon))
+    }
+
+    if(importDoc.icon ) {
+      fse.copySync(path.join(tempInDir, importDoc.icon), getPathByCWD('assets', importDoc.icon))
+    }
+
+    for(let key in importDoc) {
+      if(each != '_id' && currDoc.hasOwnProperty(key)) {
+        currDoc[key] = importDoc[key];
+      }
+    }
+
+    await db.updateAsync({_id: currDoc._id}, currDoc, {upsert: true});
+    return Promise.resolve();
+  }
 }
 
 async function syncApiFiles(tempInDir) {
@@ -91,40 +135,6 @@ async function syncApi(tempInDir, importApi) {
   }
 }
 
-
-async function syncDoc(importDoc, tempInDir) {
-  var currDoc = await db.findOne({_id: importDoc._id});
-  //如果导入的是新的数据 则直接插入
-  if(!currDoc) {
-    await db.insertAsync(importDoc);
-    if(importDoc.icon)
-      fse.copySync(path.join(tempInDir, importDoc.icon))
-    return Promise.resolve()
-  }
-
-  //如果导入的数据与当前数据库冲突，则通过最后更新时间判断是否插入
-  if(currDoc.updated_at < importDoc.updated_at) {
-
-    if(currDoc.icon) {
-      fse.removeSync(getPathByCWD('assets', currDoc.icon))
-    }
-
-    if(importDoc.icon ) {
-      fse.copySync(path.join(tempInDir, importDoc.icon))
-    }
-
-    for(let key in importDoc) {
-      if(each != '_id' && currDoc.hasOwnProperty(key)) {
-        currDoc[key] = importDoc[key];
-      }
-    }
-
-    await db.updateAsync({_id: currDoc._id}, currDoc, {upsert: true});
-    return Promise.resolve();
-  }
-}
-
-
 function getPathByCWD() {
   return path.join(process.cwd(), ...arguments)
 }
@@ -132,6 +142,7 @@ function getPathByCWD() {
 function handleExportData(destDir) {
   var tempOutDir = getPathByCWD('tempdir', uuidv1()) ;
   fse.ensureDirSync(tempOutDir);
+  fse.ensureDirSync(getPathByCWD('assets'));
   fse.copySync(getPathByCWD('assets'), path.join(tempOutDir, 'assets'));
   fse.copySync(getPathByCWD('data'), path.join(tempOutDir, 'data'));
 
@@ -155,10 +166,10 @@ async function importData(src) {
 }
 
 function exportData(path) {
-  console.log('export data path', path, remote.getGlobal('2EpLmIwVlwdECN5j'))
+  console.log('export data path', path)
   if(!path || path.length == 0) return;
 
-  //handleExportData(path[0])
+  handleExportData(path[0])
 }
 
 export {getPathByCWD, importData, exportData};

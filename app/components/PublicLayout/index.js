@@ -66,6 +66,12 @@ class Main extends React.Component {
   //加载左侧导航数据
   handleLoadData = (treeNode) => {
     return new Promise((resolve) => {
+      if(this.state.checkable) {
+        console.log('handleLoadData not process');
+
+        resolve();
+        return;
+      }
       //如果已经渲染过 (这样有bug 如果开始就有数据但没展开 然后动态添加数据后 原来的数据旧无法展开了)
       if (treeNode.props && treeNode.props.children && treeNode.props.children.length) {
         resolve();
@@ -186,6 +192,9 @@ class Main extends React.Component {
 
   handleSelectDoc = (key, evt) => {
     console.log('handleSelectDoc', evt.node.props.dataRef);
+    if(this.state.checkable) {
+      return console.log('handleSelectDoc not process');
+    }
     if(!evt.node.props.dataRef || evt.node.props.dataRef.type !== 'api') {
       this.manualExpandTreeNode(evt.node.props.dataRef);
       this.handleLoadData(evt.node).then();
@@ -240,6 +249,9 @@ class Main extends React.Component {
   }
 
   handleExpand =(keys, evt) => {
+    if(this.state.checkable) {
+      return console.log('handleExpand not process');
+    }
     console.log('handleExpand', keys, evt)
     //evt.node.props.expanded = true;
     this.setState({
