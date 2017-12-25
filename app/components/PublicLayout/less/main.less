@@ -61,20 +61,8 @@
             overflow-x:hidden;
             .search {
                 padding: 0 10px;
-                .ant-input {
-                    background-color: #232324;
-                    border: 0;
-                    border-radius: 5px;
-                    &:focus {
-                        box-shadow: none;
-                    }
-                }
-                input,
-                .ant-input-suffix,
-                input::-webkit-input-placeholder {
-                    color: #696969;
-                }
             }
+            
         }
         .action {
             height: 40px;
@@ -176,6 +164,8 @@ textarea,
 input::-webkit-input-placeholder {
     color: #696969;
 }
+
+.ant-select-selection__rendered {position:relative; top:2px;}
 
 .ant-select-selection--multiple .ant-select-selection__choice {
     background-color: #2c2d2e;

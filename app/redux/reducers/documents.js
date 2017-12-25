@@ -107,7 +107,14 @@ function documents(state = initialState, action={}) {
 
     return p;
 
-case 'SET_SHOWABLE_DOC':
+  case 'SEARCH_APIS_BY_KEYWORD':
+    console.log('SEARCH_APIS', action.payload)
+    var p = {...state };
+    p.searchApis = [...action.payload ];
+
+    return p;
+
+  case 'SET_SHOWABLE_DOC':
     var p ={...state }
 
     var x = p.docs.find(each => each._id == action.payload.key);

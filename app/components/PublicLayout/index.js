@@ -11,6 +11,7 @@ import Detail from '../Api/Detail';
 import EditModal from '../Api/EditModal';
 import GroupModal from '../Api/GroupModal';
 import DocumentModal from '../Document/DocumentModal';
+import SearchInput from '../SearchInput/';
 
 import { add, setting as setIcon, about, back, export as exportIcon, save } from '../Icon';
 import logo from './images/logo.png'
@@ -218,7 +219,9 @@ class Main extends React.Component {
       }
     })
   }
-  handleSearch = (val) => {
+
+  //通过关键字搜索的时候 直接跳转到搜索列表 目前弃用
+  handleSearchx = (val) => {
     console.log(val)
     if(val.trim().length == 0) return;
     
@@ -226,6 +229,20 @@ class Main extends React.Component {
     var pt = '/search/' + val;
     if(this.props.location.pathname != pt)
       this.props.history.push(pt)
+  }
+
+  handleSearch = (val, opt) => {
+    var api = opt.props.api;
+    var pt = '/detail/' + api._id;
+    if(pt != this.props.location.pathname)
+      this.props.history.push(pt);
+    this.props.dispatch({
+      type:'SHOW_DETAIL', 
+      payload: {
+        api: api,
+        parentNode: api.parentNode
+      }
+    })
   }
 
   handleImport = (evt) => {
@@ -289,10 +306,7 @@ class Main extends React.Component {
           </div>
           <div className='nav'>
             <div className='search'>
-              <Search
-                placeholder="input search text"
-                onSearch={this.handleSearch}
-              />
+              <SearchInput style={{width:180}} onSelect={this.handleSearch}></SearchInput>
             </div>
             <div>
               <DocumentTree treeData={this.props.docs}

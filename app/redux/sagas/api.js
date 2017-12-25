@@ -71,9 +71,9 @@ function* searchApis(action) {
   }
 
   var p = yield Api.retrieve(condition);
-
+  var type = payload.hasOwnProperty('keyword') && payload.keyword ? 'SEARCH_APIS_BY_KEYWORD':'SEARCH_APIS';
   var xAction = {
-    type: 'SEARCH_APIS',
+    type: type,
     payload: p
   }
 

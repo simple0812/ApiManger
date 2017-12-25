@@ -35,13 +35,13 @@ async function handleExportData(destDir) {
 
   await exportLanguage(exportDb);
   await exportDocs(exportDb, tempOutDir).then(() => {
-    console.log('export doc success');
+    console.log('handle export doc success');
   }).catch(err => {
-    console.log('export doc error', err.message);
+    console.log('handle export doc error', err.message);
   });
 
   await zip(tempOutDir, path.join(destDir, 'apidata.zip')).then(()=> {
-    console.log('abc');
+    console.log('export success');
   }).catch(err => {
     console.log(err.message);
   })
