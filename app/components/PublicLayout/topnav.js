@@ -30,6 +30,7 @@ class TopNav extends React.Component {
   render() {
     return (
     <div className="topnav">
+      <div className='close_area' onDoubleClick={this.handleClose}></div>
       <div className='navcmd'>
         <Icon className='quit_cmd' type="close" onClick={this.handleClose} ></Icon>
         <Icon className='max_cmd' type="laptop" onClick={this.handleMax}  ></Icon>

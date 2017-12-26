@@ -28,7 +28,7 @@ export default class Document extends BaseModel {
     return db.findAsync(p).then( docs => {
       docs.forEach(each => {
         console.log('eac', each)
-        var pathname = path.join(process.cwd(), 'assets', each.icon || {});
+        var pathname = path.join(process.cwd(), 'assets', each.icon || '');
 
         if(each.icon && fs.existsSync(pathname)) {
           fs.unlinkSync(pathname);
@@ -43,7 +43,21 @@ export default class Document extends BaseModel {
         return Promise.resolve();
       });
     })
-  } 
+  }
+
+  static async getUniqeName(name) {
+    var doc = await db.findOneAsync({name, table_name: this.name});
+    if(!doc) return Promise.resolve(name);
+
+    return this.getUniqeName(name + '_re');
+  }
+
+  static async save(doc) {
+    doc.created_at = ~~(new Date().getTime()/1000);
+    doc.updated_at = doc.created_at;
+    doc.name = await this.getUniqeName(doc.name);
+    return db.insertAsync({...doc, table_name: this.name});
+  }
 
   static remove(conditions) {
     conditions = conditions || {};
