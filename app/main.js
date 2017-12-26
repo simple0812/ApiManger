@@ -3,6 +3,8 @@ const electron = require('electron')
 const app = electron.app
 // Module to create native browser window.
 const BrowserWindow = electron.BrowserWindow
+const globalShortcut = electron.globalShortcut
+const Menu = electron.Menu
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
@@ -25,6 +27,23 @@ function createWindow () {
     // when you should delete the corresponding element.
     mainWindow = null
   })
+
+  //前期为了调试方面，默认打开控制台
+  mainWindow.webContents.openDevTools({ detach: true });
+  //注册打开控制台的快捷键
+  globalShortcut.register('ctrl+shift+alt+e', function () {
+      let win = BrowserWindow.getFocusedWindow();
+      if (win) {
+          win.webContents.openDevTools({ detach: true });
+      }
+  });
+  //去掉默认菜单栏
+  Menu.setApplicationMenu(null);
+  // eslint-disable-next-line no-console
+  console.log('mainWindow opened');
+ //添加这段代码
+  BrowserWindow.mainWindow = mainWindow;
+  return mainWindow;
 }
 
 // This method will be called when Electron has finished

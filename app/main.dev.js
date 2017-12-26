@@ -1,7 +1,8 @@
 /* eslint global-require: 0 */
 
-import { app, BrowserWindow, dialog, ipcMain } from 'electron';
+import { app, BrowserWindow, dialog, ipcMain, globalShortcut, Menu } from 'electron';
 import MenuBuilder from './menu';
+require('./server/models/db');
 
 let mainWindow = null;
 
@@ -16,6 +17,34 @@ if (process.env.NODE_ENV === 'development' || process.env.DEBUG_PROD === 'true')
   const p = path.join(__dirname, '..', 'app', 'node_modules');
   require('module').globalPaths.push(p);
 }
+
+// function createWindow() {
+//     var mainWindow = new BrowserWindow({
+//         width: 1024,
+//         height: 728,
+//         frame: false,
+//     });
+//     mainWindow.loadURL(winURL);
+//     mainWindow.on('closed', () => {
+//         mainWindow = null
+//     });
+//     //前期为了调试方面，默认打开控制台
+//     mainWindow.webContents.openDevTools({ detach: true });
+//     //注册打开控制台的快捷键
+//     globalShortcut.register('ctrl+shift+alt+e', function () {
+//         let win = BrowserWindow.getFocusedWindow();
+//         if (win) {
+//             win.webContents.openDevTools({ detach: true });
+//         }
+//     });
+//     //去掉默认菜单栏
+//     Menu.setApplicationMenu(null);
+//     // eslint-disable-next-line no-console
+//     console.log('mainWindow opened');
+//    //添加这段代码
+//     BrowserWindow.mainWindow = mainWindow;
+//     return mainWindow;
+// }
 
 const installExtensions = async () => {
   const installer = require('electron-devtools-installer');
@@ -54,11 +83,12 @@ app.on('ready', async () => {
   if (process.env.NODE_ENV === 'development' || process.env.DEBUG_PROD === 'true') {
     await installExtensions();
   }
-
+  
   mainWindow = new BrowserWindow({
     show: false,
     width: 1024,
-    height: 728
+    height: 728,
+    frame: false,
   });
 
   mainWindow.loadURL(`file://${__dirname}/app.html`);
@@ -78,9 +108,15 @@ app.on('ready', async () => {
   });
 
   mainWindow.on('open', () => {
-    console.log('xxx')
   });
 
   const menuBuilder = new MenuBuilder(mainWindow);
   menuBuilder.buildMenu();
+
+  //去掉默认菜单栏
+  Menu.setApplicationMenu(null);
+  // eslint-disable-next-line no-console
+  console.log('mainWindow opened');
+ //添加这段代码
+  //BrowserWindow.mainWindow = mainWindow;
 });

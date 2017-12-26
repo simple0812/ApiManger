@@ -12,6 +12,7 @@ import EditModal from '../Api/EditModal';
 import GroupModal from '../Api/GroupModal';
 import DocumentModal from '../Document/DocumentModal';
 import SearchInput from '../SearchInput/';
+import TopNav from './topnav';
 
 import { add, setting as setIcon, about, back, export as exportIcon, save } from '../Icon';
 import logo from './images/logo.png'
@@ -232,6 +233,7 @@ class Main extends React.Component {
   }
 
   handleSearch = (val, opt) => {
+    console.log('handleSearch', opt.props.api);
     var api = opt.props.api;
     var pt = '/detail/' + api._id;
     if(pt != this.props.location.pathname)
@@ -240,7 +242,7 @@ class Main extends React.Component {
       type:'SHOW_DETAIL', 
       payload: {
         api: api,
-        parentNode: api.parentNode
+        apiParentNode: api.parentNode
       }
     })
   }
@@ -299,7 +301,8 @@ class Main extends React.Component {
 
   render() {
     return (
-      <div className='main'>
+      <div className='main' style={{paddingTop:20}}>
+        <TopNav />
         <div className='siderbar' style={{height:'100%'}}>
           <div className='logo'>
             <img src={ logo } alt="logo" />
@@ -387,7 +390,6 @@ class Main extends React.Component {
             : this.props.children
           }
         </div>
-        
       </div>
     );
   }

@@ -104,6 +104,36 @@ if (false) {
   require('module').globalPaths.push(p);
 }
 
+function createWindow() {
+  var mainWindow = new _electron.BrowserWindow({
+    show: false,
+    width: 1024,
+    height: 728,
+    resizable: false,
+    frame: false
+  });
+  mainWindow.loadURL(winURL);
+  mainWindow.on('closed', () => {
+    mainWindow = null;
+  });
+  //前期为了调试方面，默认打开控制台
+  mainWindow.webContents.openDevTools({ detach: true });
+  //注册打开控制台的快捷键
+  _electron.globalShortcut.register('ctrl+shift+alt+e', function () {
+    let win = _electron.BrowserWindow.getFocusedWindow();
+    if (win) {
+      win.webContents.openDevTools({ detach: true });
+    }
+  });
+  //去掉默认菜单栏
+  _electron.Menu.setApplicationMenu(null);
+  // eslint-disable-next-line no-console
+  console.log('mainWindow opened');
+  //添加这段代码
+  _electron.BrowserWindow.mainWindow = mainWindow;
+  return mainWindow;
+}
+
 const installExtensions = (() => {
   var _ref = (0, _asyncToGenerator3.default)(function* () {
     const installer = __webpack_require__("./node_modules/electron-devtools-installer/dist/index.js");
@@ -120,6 +150,8 @@ const installExtensions = (() => {
   };
 })();
 
+_electron.ipcMain.on('cache-dbname', (evt, data) => {});
+
 /**
  * Add event listeners...
  */
@@ -132,6 +164,10 @@ _electron.app.on('window-all-closed', () => {
   }
 });
 
+_electron.app.on('abcd', () => {
+  console.log('abcd');
+});
+
 _electron.app.on('ready', (0, _asyncToGenerator3.default)(function* () {
   if (false) {
     yield installExtensions();
@@ -140,7 +176,9 @@ _electron.app.on('ready', (0, _asyncToGenerator3.default)(function* () {
   mainWindow = new _electron.BrowserWindow({
     show: false,
     width: 1024,
-    height: 728
+    height: 728,
+    // resizable: false,
+    frame: false
   });
 
   mainWindow.loadURL(`file://${__dirname}/app.html`);
@@ -159,8 +197,17 @@ _electron.app.on('ready', (0, _asyncToGenerator3.default)(function* () {
     mainWindow = null;
   });
 
+  mainWindow.on('open', function () {});
+
   const menuBuilder = new _menu2.default(mainWindow);
   menuBuilder.buildMenu();
+
+  //去掉默认菜单栏
+  _electron.Menu.setApplicationMenu(null);
+  // eslint-disable-next-line no-console
+  console.log('mainWindow opened');
+  //添加这段代码
+  //BrowserWindow.mainWindow = mainWindow;
 }));
 
 /***/ }),

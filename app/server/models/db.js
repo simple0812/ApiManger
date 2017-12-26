@@ -13,6 +13,7 @@ const tempDbCache = {};
 
 var db = new Datastore({ filename: path.join(process.cwd(), 'data', 'data.db') });
 db = Promise.promisifyAll(db);
+
 initDb().then(() => {
   console.log('加载数据库成功');
 }).catch(err => {

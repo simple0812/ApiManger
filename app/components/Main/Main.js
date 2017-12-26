@@ -17,10 +17,6 @@ import styles from './less/main.less';
 import logo from './images/logo.png'
 
 class Main extends React.Component {
-  componentWillMount() {
-    this.props.dispatch({type:'REQ_GET_DOCS', payload:{}});
-  }
-
   componentWillReceiveProps(nextProps) {
   }
 
