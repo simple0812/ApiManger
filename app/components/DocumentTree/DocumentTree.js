@@ -72,12 +72,15 @@ export default class DocumentTree extends React.Component {
       onClick={this.handleMenu}
       group={item}
       item={item}
+      
       collect={(props) => (props)}
     >
+      <div style={{width:'100%', background:'red'}}>
       {item.icon && <img style= {{width:18,marginRight:5,float:'left'}}
         src={path.join(process.cwd(), 'assets', item.icon)} />}
       <span style={{ float:'left'}}>{getName(item, parent)}</span>
       <span style={{ color: '#47494a', float: 'right' }}>{item.version}</span>
+      </div>
     </ContextMenuTrigger>
   );
 
