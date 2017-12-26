@@ -53,7 +53,11 @@ async function initDb() {
 function connectDb(dbName) {
   if(myCache.get(dbName)) {
     console.log(`connect db ${dbName} from cache`)
-    return Promise.resolve(myCache.get(dbName));
+    var pdb = myCache.get(dbName);
+    // return pdb.loadDatabaseAsync().then(() => {
+    //   return Promise.resolve(pdb);
+    // });
+    return Promise.resolve(pdb);
   } else {
     console.log(`try to connect ${dbName} db`, myCache.get(dbName))
   }
@@ -69,25 +73,6 @@ function connectDb(dbName) {
     return Promise.resolve();
   });
 }
-
-// async function connectDb(dbName) {
-//   console.log(`connect ${dbName} db`, dbCache, dbCache[dbName], dbCache.hasOwnProperty(dbName))
-//   if(dbCache[dbName]) {
-//     return Promise.resolve(dbCache[dbName]);
-//   } else {
-//     console.log(`try to connect ${dbName} db`, dbCache)
-//   }
-
-//   var x = new Datastore({ filename: path.join(process.cwd(), 'data', dbName + '.db') });
-//   var xdb = Promise.promisifyAll(x)
-//   var a = await xdb.loadDatabaseAsync().catch(err => {
-//     console.error(`connect db ${dbName} error`, err.message);
-//     return Promise.resolve();
-//   });
-//   //换成数据库连接
-//   dbCache[dbName] = xdb;
-//   return xdb;
-// }
 
 async function connectTempDb(filename) {
   if(tempDbCache[filename]) return tempDbCache[filename];

@@ -31,7 +31,7 @@ function* updateApi(action) {
 function* createApi(action) {
   console.log('saga createApi==>', action);
   var p = yield Api.save(action.payload);
-  console.log('createApi xx', p);
+  console.log('createApi', p);
 
   var xAction = {
     type: 'CREATE_API_SUCCESS',
@@ -76,8 +76,9 @@ function* searchApis(action) {
     type: type,
     payload: p
   }
-
+  console.time('retrieveapixxxx')
   yield put(xAction);
+  console.timeEnd('retrieveapixxxx')
 }
 
 

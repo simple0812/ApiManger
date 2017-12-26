@@ -4,6 +4,7 @@ import { withRouter, browserHistory } from 'react-router'
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import Markdown from '../Markdown';
+import { getName } from '../common';
 import { Tag } from 'antd';
 import './less/detail.less';
 
@@ -30,14 +31,6 @@ class Detail extends React.Component {
     if (status === 2) return <a href="javascript:void(0)" onClick={() => { this.handleTagClick({ version_status: status, name: 'Candidate Recommendation' }); }}>Candidate Recommendation</a>;
     return <a href="javascript:void(0)" onClick={() => { this.handleTagClick({ version_status: status, name: 'Recommendation' }); }}>Recommendation</a>;
   }
-  getName = (api, parent) => {
-    parent = parent || {};
-    if (api.object_type === 1) return `${api.name}()`;
-    if (api.object_type === 2) return `${parent.name}.${api.name}()`;
-    if (api.object_type === 4) return `${parent.name}.${api.name}`;
-    if (api.object_type === 5) return `${api.name}{}`;
-    return api.name;
-  }
   getStatus = (status) => {
     if(!this.props.api._id) return;
     status = status || 1;
@@ -56,12 +49,12 @@ class Detail extends React.Component {
 
   render() {
     const { api, parent } = this.props;
-    if (!api) return (<div />);
+    if (!api || !api._id || api.type == 'group') return (<div />);
     return (
       <div className="api-detail">
         <div className="header label">
           <div className="header-content">
-            <span>{this.getName(api, parent)}</span>
+            <span>{getName(api, parent)}</span>
             <span className="tip">{this.getStatus(api.status)}</span>
           </div>
         </div>

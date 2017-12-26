@@ -1,8 +1,8 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import { Modal, Input, Form, Button } from 'antd';
-
+import { Modal, Input, Form, Button, Radio } from 'antd';
+const RadioGroup = Radio.Group;
 const FormItem = Form.Item;
 
 class GroupModal extends React.Component {
@@ -71,6 +71,18 @@ class GroupModal extends React.Component {
                 rules: [{ required: true, message: '分组名称必须填写' }],
                 initialValue: api.name || ''
               })(<Input />)}
+            </FormItem>
+            <FormItem
+              label="是否为类型"
+              {...formItemLayout}
+            >
+              {getFieldDecorator('group_type', {
+                rules: [{}],
+                initialValue: api.group_type || 'class'
+              })(<RadioGroup>
+                <Radio value='class'>类型</Radio>
+                <Radio value='collection'>归类</Radio>
+              </RadioGroup>)}
             </FormItem>
           </Form>
         </Modal>

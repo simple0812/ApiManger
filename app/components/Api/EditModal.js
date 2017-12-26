@@ -71,7 +71,9 @@ class EditModal extends React.Component {
       height: '30px',
       lineHeight: '30px',
     };
-    const { status, api } = this.props;
+    const { status, api, parentNode } = this.props;
+
+    console.log(parentNode)
 
     return (
       <div className="api-edit">
@@ -91,6 +93,17 @@ class EditModal extends React.Component {
                 initialValue: api.name
               })(<Input />)}
             </FormItem>
+            {parentNode.table_name == 'Api' && parentNode.group_type == 'collection' &&
+            <FormItem
+              label="API类型名称"
+              {...formItemLayout}
+            >
+              {getFieldDecorator('class_name', {
+                rules: [{ required: true, message: 'API类型名称必须填写' }],
+                initialValue: api.class_name || ''
+              })(<Input />)}
+            </FormItem>
+            }
             <FormItem
               label="API类型"
               {...formItemLayout}

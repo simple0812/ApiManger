@@ -2,6 +2,7 @@ import React from 'react';
 import { Tree } from 'antd';
 import { ContextMenuTrigger } from 'react-contextmenu';
 import _ from 'lodash';
+import { getName } from '../common';
 var path = require('path');
 
 const TreeNode = Tree.TreeNode;
@@ -9,15 +10,6 @@ const TreeNode = Tree.TreeNode;
 export default class DocumentTree extends React.Component {
   constructor(props) {
     super(props);
-  }
-
-  getName = (api, parent) => {
-    parent = parent || {};
-    if (api.object_type === 1) return `${api.name}()`;
-    if (api.object_type === 2) return `${parent.name}.${api.name}()`;
-    if (api.object_type === 4) return `${parent.name}.${api.name}`;
-    if (api.object_type === 5) return `${api.name}{}`;
-    return api.name;
   }
 
   renderTreeNodes = (data, parent) => {
@@ -84,7 +76,7 @@ export default class DocumentTree extends React.Component {
     >
       {item.icon && <img style= {{width:18,marginRight:5,float:'left'}}
         src={path.join(process.cwd(), 'assets', item.icon)} />}
-      <span style={{ float:'left'}}>{this.getName(item, parent)}</span>
+      <span style={{ float:'left'}}>{getName(item, parent)}</span>
       <span style={{ color: '#47494a', float: 'right' }}>{item.version}</span>
     </ContextMenuTrigger>
   );

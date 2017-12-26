@@ -1,6 +1,8 @@
 import db, { connectDb } from './db';
 import _ from 'lodash';
 
+import Promise from 'bluebird';
+
 var BaseModel = require('./baseModel');
 /*
 {
@@ -28,16 +30,6 @@ export default class Api extends BaseModel {
     super(obj)
   }
 
-  // static removeById(id) {
-  //   if(!id) return;
-  //   var p = {_id: id, table_name: this.name}
-  //   return db.removeAsync(p).then(ret => {
-  //     return db.findAsync({table_name: 'Api', parent_id: id}).then( apis => {
-  //       if(!apis || !apis.length) return Promise.resolve();
-  //       return Promise.all(apis.map(each => this.removeById.call(this, each._id)));
-  //     })
-  //   });
-  // }
   static async removeById(id, doc_id) {
     if(!id || !doc_id) return;
     console.log('removeById', id, doc_id);
@@ -53,6 +45,7 @@ export default class Api extends BaseModel {
   static findAncestors(parentId, ancestors, xdb) {
     ancestors = ancestors || [];
     if(parentId == 0) return ancestors;
+    var _this = this;
     return xdb.findOneAsync({_id: parentId, table_name: this.name}).then(api => {
       ancestors.unshift(api);
 
@@ -60,7 +53,7 @@ export default class Api extends BaseModel {
         return Promise.resolve(ancestors);
       }
 
-      return this.findAncestors(api.parent_id, ancestors, xdb);
+      return _this.findAncestors(api.parent_id, ancestors, xdb);
     });
   }
 
@@ -80,9 +73,17 @@ export default class Api extends BaseModel {
     return api;
   }
 
+  static async findInSpecDb(conditions, id) {
+    console.log('findInSpecDb', id, conditions );
+    var xdb = await connectDb(id);
+    await xdb.loadDatabaseAsync();
+    return xdb.findAsync(conditions);
+  }
+
   //1.如果conditions包含document_id 则直接再对应的document文件查找
   //2.如果不包含document_id 则先扫描data.db 或者所有可以显示的document 然后再查找
   static async retrieve(conditions) {
+    console.log('api retrieve conditions', conditions);
     conditions = conditions || {};
     var p = {...conditions, table_name: this.name}
     var docIds = [];
@@ -93,22 +94,11 @@ export default class Api extends BaseModel {
       docIds = docs.map(each => each._id);
     }
 
-    var xapis = await Promise.all(docIds.map(async each => {
-      var xdb = await connectDb(each);
-      return xdb.findAsync(p);
-    }))
+    var xapis = await Promise.map(docIds, this.findInSpecDb.bind(this, p));
+    console.log('xapis',xapis);
 
     var apis = _.flatten(xapis);
-
-    return Promise.all(apis.map(each => this.findAncestorsIncludeDoc(each))).then(ret => {
-      return Promise.resolve(ret);
-    })
-
-    //这种方式同样也能获取到数据 但是客户端会出现数据不能绑定的问题 莫名其妙
-    // apis.map(async each => {
-    //   return await this.findAncestorsIncludeDoc(each)
-    // })
-    // return apis;
+    return Promise.map(apis, this.findAncestorsIncludeDoc.bind(this));
   }
 
   static async update(conditions, model) {

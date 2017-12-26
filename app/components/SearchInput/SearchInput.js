@@ -3,6 +3,8 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import './less/searchInput.less';
 import { Select,Button  } from 'antd';
+import {getName} from '../common';
+
 import _ from 'lodash';
 const Option = Select.Option;
 
@@ -24,15 +26,6 @@ class SearchInput extends React.Component {
       value: ''
     } 
     this.timeout = null;
-  }
-
-  getName = (api, parent) => {
-    parent = parent || {};
-    if (api.object_type === 1) return `${api.name}()`;
-    if (api.object_type === 2) return `${parent.name}.${api.name}()`;
-    if (api.object_type === 4) return `${parent.name}.${api.name}`;
-    if (api.object_type === 5) return `${api.name}{}`;
-    return api.name;
   }
 
   handleChange = (value) => {
@@ -61,9 +54,22 @@ class SearchInput extends React.Component {
     });
   }
 
+  renderCtrl = () => {
+    var apis =[...this.props.apis];
+    if(apis.length == 0) {
+      apis.push({name:'搜索结果为空', _id:Math.random(), parentNode:{}})
+    } 
+
+    return apis.map(d => 
+      <Option 
+        key={d._id} api={d} 
+        value={getName(d, d.parentNode)}>
+        {getName(d, d.parentNode)}
+      </Option>)
+  }
+
   render() {
-    const options = this.props.apis.map(d => 
-      <Option key={d._id} api={d} value={this.getName(d, d.parentNode)}>{this.getName(d, d.parentNode)}</Option>);
+    
     return (
       <div>
         <Select
@@ -71,16 +77,13 @@ class SearchInput extends React.Component {
           optionLabelProp='children'
           value={this.state.value}
           placeholder='输入关键字'
-          notFoundContent=""
           style={this.props.style}
-          defaultActiveFirstOption={false}
           showSearch={true}
-          showArrow={false}
+          showArrow={true}
           onFocus={this.handleFocus }
-          filterOption={false}
           onSelect ={this.props.onSelect}
           onChange={_.throttle(this.handleChange, 500)}>
-          {options}
+          {this.renderCtrl()}
         </Select>
       </div>
     );

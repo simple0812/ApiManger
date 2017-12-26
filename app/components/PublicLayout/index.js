@@ -133,6 +133,7 @@ class Main extends React.Component {
   }
 
   handleMenuItemClick =(evt, data) => {
+    console.log('handleMenuItemClick', data)
     if(!data || !data.item) return;
     switch (data.action) {
     case 'REQ_DEL_ITEM':
@@ -142,9 +143,9 @@ class Main extends React.Component {
       if(data.item.table_name == 'Document')
         this.setState({docModalStatus: true, doc: data.item});
       else if(data.item.type == 'api')
-        this.setState({apiModalStatus: true, api: data.item, apiParentNode:{}});
+        this.setState({apiModalStatus: true, api: data.item, apiParentNode:data.item.parentNode || {}});
       else if(data.item.type == 'group') 
-        this.setState({groupModalStatus: true, api: data.item, apiParentNode:{}});
+        this.setState({groupModalStatus: true, api: data.item, apiParentNode: data.item.parentNode || {}});
       break;
     case 'ADD_API': 
       this.setState({apiModalStatus: true, api: {}, apiParentNode: data.item});
