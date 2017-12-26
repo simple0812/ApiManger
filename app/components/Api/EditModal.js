@@ -3,7 +3,11 @@ import { connect } from 'react-redux';
 import { Select, Form, Input, Radio, Button, Modal, Row, Col } from 'antd';
 import PropTyeps from 'prop-types';
 import Compatibility from '../Compatibility/';
+
 import './less/edit.less';
+import 'react-mde/lib/styles/css/react-mde-all.css';
+import 'font-awesome/css/font-awesome.css';
+import ReactMde, { ReactMdeCommands } from 'react-mde';
 
 const FormItem = Form.Item;
 const RadioGroup = Radio.Group;
@@ -27,13 +31,14 @@ class EditModal extends React.Component {
   handleSubmit = (e) => {
     e.preventDefault();  
     this.props.form.validateFieldsAndScroll((err,values)=>{  
+      console.log('handleSubmit', values)
       if(!err){  
         this.props.onClose();
         this.props.form.resetFields();//清空提交的表单 
         console.log(values, this.props.api); 
         values.type = 'api';
         values.tags = values.tags.split(' ').filter(each => each);
-        
+        values.code = values.code.text || values.code || '';
         if(this.props.api._id) {
           values._id = this.props.api._id;
           this.props.dispatch({type:'REQ_UPDATE_API', payload: {...this.props.api, ...values}});
@@ -55,6 +60,15 @@ class EditModal extends React.Component {
   handleClose = () => {  
     this.props.onClose(); 
   } 
+
+  handleChange =(evt)=> {
+    console.log('handleChange', evt)
+  }
+
+   normFile = (e) => {
+    return e;
+    //return e.text;
+  }
 
   render() {
     const { getFieldDecorator } = this.props.form;
@@ -144,9 +158,19 @@ class EditModal extends React.Component {
               {...formItemLayout}
             >
               {getFieldDecorator('code', {
-                initialValue:  api.code || ''
-              })(<TextArea rows={8} />)}
+                getValueFromEvent: this.normFile,
+                initialValue:  {text: api.code || ''},
+                rules: [{
+                  validator:(rule, value, cb) => {
+                  return cb();} 
+                }],
+              })(<ReactMde
+                    visibility={{preview:false}}
+                    onChange={this.handleChange}
+                    commands={ReactMdeCommands.getDefaultCommands()}
+                />)}
             </FormItem>
+
             <FormItem
               label="文档成熟度"
               {...formItemLayout}
