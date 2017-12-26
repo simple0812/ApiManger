@@ -30,6 +30,7 @@ class SearchInput extends React.Component {
 
     this.setState({ 
       value:value,
+      isSearching:true,
     });
 
     this.props.dispatch({type:'REQ_SEARCH_APIS', payload:{name:value, keyword:value}});
@@ -41,7 +42,15 @@ class SearchInput extends React.Component {
 
   handleFocus =() => {
     this.setState({ 
-      value:''
+      value:'',
+      isSearching:true,
+    });
+  }
+
+  handleBlur = () => {
+    console.log('handleBlur')
+    this.setState({ 
+      isSearching:false,
     });
   }
 
@@ -54,10 +63,12 @@ class SearchInput extends React.Component {
       </Option>)
   }
 
+
+
   render() {
     
     return (
-      <div>
+      <div style={{position:'relative'}}>
         <Select
           mode="combobox"
           value={this.state.value}
@@ -65,10 +76,18 @@ class SearchInput extends React.Component {
           style={{width:180}}
           notFoundContent='搜索结果为空'
           onFocus={this.handleFocus }
+          onBlur={this.handleBlur}
           onSelect ={this.props.onSelect}
           onChange={_.throttle(this.handleChange, 500)}>
           {this.renderCtrl()}
         </Select>
+        {this.props.apis.length == 0 && this.state.isSearching &&
+        <div style={{width:180,background:'white', position:'absolute', top:30,
+          textAlign:'center', zIndex:99, borderRadius:3,
+          paddingTop:5,paddingBottom:5}}>
+          <span>搜索结果为空</span>
+        </div>
+        }
       </div>
     );
   }
