@@ -6,7 +6,8 @@ import Compatibility from '../Compatibility/';
 
 import './less/edit.less';
 import 'react-mde/lib/styles/css/react-mde-all.css';
-import 'font-awesome/css/font-awesome.css';
+import 'font-awesome/less/font-awesome.less';
+
 import ReactMde, { ReactMdeCommands } from 'react-mde';
 
 const FormItem = Form.Item;
@@ -105,17 +106,7 @@ class EditModal extends React.Component {
                 initialValue: api.name
               })(<Input />)}
             </FormItem>
-            {parentNode.table_name == 'Api' && parentNode.group_type == 'collection' &&
-            <FormItem
-              label="API类型名称"
-              {...formItemLayout}
-            >
-              {getFieldDecorator('class_name', {
-                rules: [{ required: true, message: 'API类型名称必须填写' }],
-                initialValue: api.class_name || ''
-              })(<Input />)}
-            </FormItem>
-            }
+            
             <FormItem
               label="API类型"
               {...formItemLayout}
@@ -132,6 +123,20 @@ class EditModal extends React.Component {
                   <Radio value={5}>对象</Radio>
                 </RadioGroup>)}
             </FormItem>
+
+            {parentNode.table_name == 'Api' && parentNode.group_type == 'collection' &&
+            (this.props.form.getFieldsValue().object_type == 2 
+              || this.props.form.getFieldsValue().object_type == 4) &&
+            <FormItem
+              label="API类型名称"
+              {...formItemLayout}
+            >
+              {getFieldDecorator('class_name', {
+                rules: [{ required: true, message: 'API类型名称必须填写' }],
+                initialValue: api.class_name || ''
+              })(<Input />)}
+            </FormItem>
+            }
             <FormItem
               label="Tags"
               {...formItemLayout}

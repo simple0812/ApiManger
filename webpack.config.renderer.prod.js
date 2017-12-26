@@ -23,16 +23,20 @@ export default merge.smart(baseConfig, {
       // Pipe other styles through css modules and append to style.css
       {
         test: /\.css$/,
-        use: ExtractTextPlugin.extract({
-          use: {
+        use: [
+          {
+            loader: 'style-loader'
+          },
+          {
             loader: 'css-loader',
             // options: {
             //   modules: true,
+            //   sourceMap: true,
             //   importLoaders: 1,
             //   localIdentName: '[name]__[local]__[hash:base64:5]',
             // }
-          }
-        }),
+          },
+        ]
       },
       {
         test: /\.less$/,
