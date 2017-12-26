@@ -207,7 +207,7 @@ class Main extends React.Component {
     this.setState({
       apiModalStatus: false,
       api: evt.node.props.dataRef,
-      apiParentNode: evt.node.props.parent || {}
+      apiParentNode: evt.node.props.dataRef.parentNode || evt.node.props.parent || {}
     });
 
     var pt = '/detail/' + evt.node.props.dataRef._id;
@@ -217,7 +217,7 @@ class Main extends React.Component {
       type:'SHOW_DETAIL', 
       payload: {
         api: evt.node.props.dataRef,
-        parentNode: evt.node.props.parent || {}
+        parentNode: evt.node.props.dataRef.parentNode || evt.node.props.parent || {}
       }
     })
   }
@@ -255,7 +255,8 @@ class Main extends React.Component {
 
   customHideDoc = () => {
     this.setState({
-      checkable: !this.state.checkable
+      checkable: !this.state.checkable,
+      expandedKeys:[]
     })
   }
 
@@ -293,6 +294,7 @@ class Main extends React.Component {
     }, (path) => {
       importData(path).then(() => {
         console.log('import data success')
+        this.setState({expandedKeys:[]});
         this.props.dispatch({type:'REQ_GET_DOCS', payload:{}});
       }).catch(err => {
         console.log('import data error:' + err.message)
@@ -316,11 +318,11 @@ class Main extends React.Component {
               <DocumentTree treeData={this.props.docs}
                 ref='docTree'
                 checkedKeys={this.props.checkedKeys}
-                onCheck={this.handleChecked}
+                expandedKeys={this.state.expandedKeys}
                 checkable={this.state.checkable}
+                onCheck={this.handleChecked}
                 onMenuItemClick={this.handleMenuItemClick}
                 onExpand={this.handleExpand}
-                expandedKeys={this.state.expandedKeys}
                 onSelect={this.handleSelectDoc}
                 onLoadData={this.handleLoadData}>
               </DocumentTree>

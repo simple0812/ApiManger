@@ -73,8 +73,6 @@ class EditModal extends React.Component {
     };
     const { status, api, parentNode } = this.props;
 
-    console.log(parentNode)
-
     return (
       <div className="api-edit">
           <Form>

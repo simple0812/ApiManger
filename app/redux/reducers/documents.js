@@ -2,7 +2,8 @@ import _ from 'lodash';
 
 const initialState  = {
   docs :[],
-  apis:[]
+  apis:[],
+  searchApis:[],
 } 
 
 function delRecursion(state, doc) {
@@ -61,6 +62,11 @@ function documents(state = initialState, action={}) {
   case 'CREATE_API_SUCCESS':
     console.log('CREATE_API_SUCCESS', action.payload);
     var p = {...state};
+    action.payload.parentNode = _.find(p.docs, each => {
+      if(action.payload.parent_id == 0) 
+        return each._id == action.payload.document_id;
+      return each._id == action.payload.parent_id;
+    }) || {};
     p.docs =[...p.docs, action.payload];
     modifySelectedApi(p, action.payload._id);
 
@@ -78,8 +84,6 @@ function documents(state = initialState, action={}) {
         }
       }
     }
-
-    console.log('xxxxxxxxxx', p.docs)
 
     return p;
   case 'CREATE_DOC_SUCCESS':
@@ -108,11 +112,10 @@ function documents(state = initialState, action={}) {
     return p;
 
   case 'SEARCH_APIS_BY_KEYWORD':
-    console.log('SEARCH_APIS', action.payload)
+    console.log('SEARCH_APIS_BY_KEYWORD', action.payload)
     var p = {...state };
     p.searchApis = [...action.payload ];
-
-    return p;
+    return {...p};
 
   case 'SET_SHOWABLE_DOC':
     var p ={...state }

@@ -113,7 +113,7 @@ function mapStateToProps(state) {
   return {
     docs: state.documents.docs || [],
     api:state.documents.api || {},
-    parent:state.documents.apiParentNode || {},
+    parent:state.documents.parentNode || {},
   }
 }
 
