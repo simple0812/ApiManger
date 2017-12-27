@@ -66,7 +66,7 @@ class EditModal extends React.Component {
         console.log(values, this.props.api); 
         values.type = 'api';
         values.tags = values.tags.split(' ').filter(each => each);
-        values.code = values.code.text || values.code || '';
+        values.code = values.code.text || '';
         if(this.props.api._id) {
           values._id = this.props.api._id;
           this.props.dispatch({type:'REQ_UPDATE_API', payload: {...this.props.api, ...values}});
