@@ -7,6 +7,7 @@ import Markdown from '../Markdown';
 import { getName } from '../common';
 import { Tag } from 'antd';
 import './less/detail.less';
+import eye from './images/hint.png';
 
 class Detail extends React.Component {
   constructor(props) {
@@ -49,7 +50,12 @@ class Detail extends React.Component {
 
   render() {
     const { api, parent } = this.props;
-    if (!api || !api._id || api.type == 'group') return (<div />);
+    if (!api || !api._id || api.type == 'group') {
+      return  <div className='xxx' style={{width:'100%', height:'100%', textAlign:'center'}}>
+        <img src={eye} style={{position:'relative', top:'45%'}} />
+      </div>
+    }
+
     return (
       <div className="api-detail">
         <div className="header label">
