@@ -6,9 +6,31 @@ import Compatibility from '../Compatibility/';
 
 import './less/edit.less';
 import 'react-mde/lib/styles/css/react-mde-all.css';
-import 'font-awesome/less/font-awesome.less';
+import 'font-awesome/css/font-awesome.min.css';
+import $ from 'jquery';
 
 import ReactMde, { ReactMdeCommands } from 'react-mde';
+
+function setCursorPosition(elem, index) {
+    var val = elem.value
+    var len = val.length
+ 
+    // 超过文本长度直接返回
+    if (len < index) return
+    setTimeout(function() {
+        elem.focus()
+        if (elem.setSelectionRange) { // 标准浏览器
+            elem.setSelectionRange(index, index)   
+        } else { // IE9-
+            var range = elem.createTextRange()
+            range.moveStart("character", -len)
+            range.moveEnd("character", -len)
+            range.moveStart("character", index)
+            range.moveEnd("character", 0)
+            range.select()
+        }
+    }, 10)
+}
 
 const FormItem = Form.Item;
 const RadioGroup = Radio.Group;
@@ -21,9 +43,14 @@ class EditModal extends React.Component {
 
   constructor(props) {
     super(props);
+
+    $('#mde-text').on('textarea', 'blur', function() {
+      console.log('blur...')
+    })
   }
 
   componentDidMount() {
+
   }
 
   componentWillReceiveProps(nextProps) {
@@ -63,12 +90,28 @@ class EditModal extends React.Component {
   } 
 
   handleChange =(evt)=> {
-    console.log('handleChange', evt)
+    // console.log('x', $('#mdEditorArea').get(0).selectionEnd, $('#mdEditorArea').get(0).selectionStart)
+    // if(evt.text.slice(-1) == ' ') {
+    //   console.log('true');
+    // } else {
+    //   setTimeout(function() {
+    //     $('#mdEditorArea').val(evt.text + '')
+    //     setCursorPosition($('#mdEditorArea').get(0), evt.text.length+1)
+    //   },0)
+    // }
   }
 
-   normFile = (e) => {
+  normFile = (e) => {
     return e;
     //return e.text;
+  }
+
+  textAreaProps ={
+    id:'mdEditorArea',
+    onBlur: function(evt) {
+    },
+    onFocus: function(evt) {
+    },
   }
 
   render() {
@@ -171,6 +214,7 @@ class EditModal extends React.Component {
                 }],
               })(<ReactMde
                     visibility={{preview:false}}
+                    textAreaProps={this.textAreaProps}
                     onChange={this.handleChange}
                     commands={ReactMdeCommands.getDefaultCommands()}
                 />)}

@@ -62,4 +62,4 @@ assets/*
 assets-x/*
 data/*
 tempdir/*
-dist/*
+app/dist/*
