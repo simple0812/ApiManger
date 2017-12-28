@@ -26,5 +26,15 @@ function* updateLanguages(action) {
   yield put(xAction);
 }
 
+function* updateSingleLanguage(action) {
+  console.log('saga updateSingleLanguage==>', action);
+  yield Language.updateSingleLanguagex(action.payload);
+  var xAction = {
+    type: 'UPDATE_SINGLE_LANGUAGE_SUCCESS',
+    payload: action.payload
+  }
 
-export { getLanguages, updateLanguages };
+  yield put(xAction);
+}
+
+export { getLanguages, updateLanguages, updateSingleLanguage };

@@ -65,7 +65,7 @@ class EditModal extends React.Component {
         this.props.form.resetFields();//清空提交的表单 
         console.log(values, this.props.api); 
         values.type = 'api';
-        values.tags = values.tags.split(' ').filter(each => each);
+        // values.tags = values.tags.split(' ').filter(each => each);
         values.code = values.code.text || '';
         if(this.props.api._id) {
           values._id = this.props.api._id;
@@ -112,6 +112,13 @@ class EditModal extends React.Component {
     },
     onFocus: function(evt) {
     },
+  }
+
+  initTags = ()=> {
+    var tags =  this.props.api.tags || [];
+    return tags.map((each, index) => {
+      return <Option key={index} value={each}>{each}</Option>
+    })
   }
 
   render() {
@@ -168,26 +175,30 @@ class EditModal extends React.Component {
             </FormItem>
 
             {parentNode.table_name == 'Api' && parentNode.group_type == 'collection' &&
-            (this.props.form.getFieldsValue().object_type == 2 
+              (this.props.form.getFieldsValue().object_type == 2 
               || this.props.form.getFieldsValue().object_type == 4) &&
-            <FormItem
-              label="API类型名称"
-              {...formItemLayout}
-            >
-              {getFieldDecorator('class_name', {
-                rules: [{ required: true, message: 'API类型名称必须填写' }],
-                initialValue: api.class_name || ''
-              })(<Input />)}
-            </FormItem>
+              <FormItem
+                label="API类型名称"
+                {...formItemLayout}
+              >
+                {getFieldDecorator('class_name', {
+                  rules: [{ required: true, message: 'API类型名称必须填写' }],
+                  initialValue: api.class_name || ''
+                })(<Input />)}
+              </FormItem>
             }
+
             <FormItem
               label="Tags"
               {...formItemLayout}
             >
               {getFieldDecorator('tags', {
-                initialValue: (api.tags || []).join(' ')
-              })(<Input />)}
+                initialValue:  api.tags || []
+              })(<Select mode="tags">
+                  {this.initTags()}
+                </Select>)}
             </FormItem>
+
             <FormItem
               label="API状态"
               {...formItemLayout}

@@ -13,6 +13,7 @@ import GroupModal from '../Api/GroupModal';
 import DocumentModal from '../Document/DocumentModal';
 import SearchInput from '../SearchInput/';
 import TopNav from './topnav';
+import Doc from './doc';
 
 import { add, setting as setIcon, about, back, export as exportIcon, save } from '../Icon';
 import logo from './images/logo.png'
@@ -47,7 +48,7 @@ class Main extends React.Component {
     this.state ={
       doc:{},
       api:{},
-      apiParentNode: {},
+      parentNode: {},
       apiModalStatus: false,
       docModalStatus: false,
       groupModalStatus: false,
@@ -143,16 +144,16 @@ class Main extends React.Component {
       if(data.item.table_name == 'Document')
         this.setState({docModalStatus: true, doc: data.item});
       else if(data.item.type == 'api')
-        this.setState({apiModalStatus: true, api: data.item, apiParentNode:data.item.parentNode || {}});
+        this.setState({apiModalStatus: true, api: data.item, parentNode:data.item.parentNode || {}});
       else if(data.item.type == 'group') 
-        this.setState({groupModalStatus: true, api: data.item, apiParentNode: data.item.parentNode || {}});
+        this.setState({groupModalStatus: true, api: data.item, parentNode: data.item.parentNode || {}});
       break;
     case 'ADD_API': 
-      this.setState({apiModalStatus: true, api: {}, apiParentNode: data.item});
+      this.setState({apiModalStatus: true, api: {}, parentNode: data.item});
       this.decideReqGetApisOrNot(data.item);
       break;
     case 'ADD_GROUP': 
-      this.setState({groupModalStatus: true,api: {}, apiParentNode: data.item});
+      this.setState({groupModalStatus: true,api: {}, parentNode: data.item});
       this.decideReqGetApisOrNot(data.item);
       break;
     default: break;
@@ -162,7 +163,7 @@ class Main extends React.Component {
   handleClose = () => {
     this.setState({
       apiModalStatus: false, 
-      // apiParentNode: {},
+      // parentNode: {},
     })
   }
   handleDocClose = () => {
@@ -207,7 +208,7 @@ class Main extends React.Component {
     this.setState({
       apiModalStatus: false,
       api: evt.node.props.dataRef,
-      apiParentNode: evt.node.props.dataRef.parentNode || evt.node.props.parent || {}
+      parentNode: evt.node.props.dataRef.parentNode || evt.node.props.parent || {}
     });
 
     var pt = '/detail/' + evt.node.props.dataRef._id;
@@ -243,7 +244,7 @@ class Main extends React.Component {
       type:'SHOW_DETAIL', 
       payload: {
         api: api,
-        apiParentNode: api.parentNode
+        parentNode: api.parentNode
       }
     })
   }
@@ -267,6 +268,15 @@ class Main extends React.Component {
     }
 
     this.props.dispatch({type:'REQ_SET_SHOWABLE_DOC', payload});
+  }
+
+  handleSingleCheck = (id, evt ) => {
+    var payload = {
+      _id: id,
+      hide: !evt.target.checked
+    }
+
+    this.props.dispatch({type:'REQ_UPDATE_DOC', payload});
   }
 
   handleExpand =(keys, evt) => {
@@ -315,6 +325,7 @@ class Main extends React.Component {
               <SearchInput style={{width:180}} onSelect={this.handleSearch}></SearchInput>
             </div>
             <div>
+            {!this.state.checkable &&
               <DocumentTree treeData={this.props.docs}
                 ref='docTree'
                 checkedKeys={this.props.checkedKeys}
@@ -325,7 +336,14 @@ class Main extends React.Component {
                 onExpand={this.handleExpand}
                 onSelect={this.handleSelectDoc}
                 onLoadData={this.handleLoadData}>
+              }
               </DocumentTree>
+            }
+              {this.state.checkable &&
+                <Doc docs={this.props.docs}
+                  onChecked={this.handleSingleCheck}>
+                </Doc>
+              }
               <NavMenu></NavMenu>
             </div>
           </div>
@@ -342,24 +360,25 @@ class Main extends React.Component {
               <Icon style={{fontSize:15}} type={this.state.checkable ? 'pushpin' : 'pushpin-o'}  />
             </a>
 
-            <Link to='/settings' title='setting' >
-              <Icon style={{fontSize:15}} type='setting'  />
-            </Link>
-
-            <a href="javascript:void(0)" 
-              onClick={() =>this.setState({more:!this.state.more}) } 
-              title='more' >
-              <img src={about} alt='more' style={{color:'white', height:35, width:20}} />
+            <a href="javascript:void(0)" onClick= {this.handleExportData}
+              title='导出数据' ><Icon style={{fontSize:15}} type='upload'  />
+            </a>
+            <a href="javascript:void(0)" title='导入数据'  onClick= {this.handleImportData}>
+              <Icon style={{fontSize:15}} type='download'  />
             </a>
           </div>
           {this.state.more &&
             <div className='action' style={{borderTop:'none'}}>
-              <a href="javascript:void(0)" onClick= {this.handleExportData}
-                title='导出数据' ><Icon style={{fontSize:15}} type='upload'  />
+              <Link to='/settings' title='setting' >
+                <Icon style={{fontSize:15}} type='setting'  />
+              </Link>
+
+              <a href="javascript:void(0)" 
+                onClick={() =>this.setState({more:!this.state.more}) } 
+                title='more' >
+                <img src={about} alt='more' style={{color:'white', height:35, width:20}} />
               </a>
-              <a href="javascript:void(0)" title='导入数据'  onClick= {this.handleImportData}>
-                <Icon style={{fontSize:15}} type='download'  />
-              </a>
+              
               <a href="javascript:void(0)" 
                 title='' >
               </a>
@@ -378,7 +397,7 @@ class Main extends React.Component {
         </DocumentModal>
         <GroupModal 
           api={this.state.api} 
-          parentNode={this.state.apiParentNode}
+          parentNode={this.state.parentNode}
           onClose={this.handleGroupClose}
           visible={this.state.groupModalStatus}>
         </GroupModal>
@@ -388,7 +407,7 @@ class Main extends React.Component {
             ? <EditModal ref='addModal' 
               visible={true} 
               api={this.state.api} 
-              parentNode={this.state.apiParentNode}
+              parentNode={this.state.parentNode}
               onClose={this.handleClose} /> 
             : this.props.children
           }

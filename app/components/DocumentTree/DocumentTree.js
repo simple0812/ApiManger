@@ -72,7 +72,6 @@ export default class DocumentTree extends React.Component {
       onClick={this.handleMenu}
       group={item}
       item={item}
-      
       collect={(props) => (props)}
     >
       <div style={{width:'100%', background:'red'}}>

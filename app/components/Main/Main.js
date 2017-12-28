@@ -25,7 +25,7 @@ class Main extends React.Component {
     this.state ={
       doc:{},
       api:{},
-      apiParentNode: {},
+      parentNode: {},
       apiModalStatus: false,
       docModalStatus: false,
       groupModalStatus: false,
@@ -47,7 +47,7 @@ class Main extends React.Component {
           ? <EditModal ref='addModal' 
             visible={true} 
             api={this.state.api} 
-            parentNode={this.state.apiParentNode}
+            parentNode={this.state.parentNode}
             onClose={this.handleClose} /> 
           : <Detail></Detail>
         }

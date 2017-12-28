@@ -1,4 +1,4 @@
-var db = require('./db');
+import db, { connectDb } from './db';
 var BaseModel = require('./baseModel');
 /*
 {
@@ -11,6 +11,18 @@ var BaseModel = require('./baseModel');
 export default class Language extends BaseModel {
   constructor(obj) {
     super(obj)
+  }
+
+  static async updateSingleLanguagex(lang) {
+    var currLangs = await db.findOneAsync({table_name:'Language'});
+    if(!currLangs) {
+      return Promise.resolve();
+    }
+    
+    var names = (currLangs.name || '').split(' ').filter(each => each);
+    names.push(lang);
+    currLangs.name = _.uniq(names).join(' ');
+    await db.updateAsync({_id:currLangs._id}, {$set:currLangs});
   }
 }
 

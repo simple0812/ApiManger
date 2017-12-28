@@ -59,6 +59,26 @@ export default class Document extends BaseModel {
     return db.insertAsync({...doc, table_name: this.name});
   }
 
+  static async updateLanguage(lang) {
+    var currLangs = await db.findOneAsync({table_name:'Language'});
+    if(!currLangs) {
+      return Promise.resolve();
+    }
+    
+    var names = (currLangs.name || '').split(' ').filter(each => each);
+    names.push(lang);
+    currLangs.name = _.uniq(names).join(' ');
+    await db.updateAsync({_id:currLangs._id}, {$set:currLangs});
+  }
+
+
+  static async update(conditions, model) {
+    conditions = conditions || {};
+    model.updated_at = ~~(new Date().getTime()/1000);
+    var p = {...conditions, table_name: this.name}
+    return db.updateAsync(p, { $set: model }, {});
+  }
+
   static remove(conditions) {
     conditions = conditions || {};
     var p = {...conditions, table_name: this.name}

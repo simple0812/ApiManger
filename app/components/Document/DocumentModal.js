@@ -60,6 +60,8 @@ class DocumentModal extends React.Component {
           readStream.pipe(writeStream);
         }
 
+        this.props.dispatch({type:'REQ_UPDATE_SINGLE_LANGUAGE', payload: values.language});
+
         if(this.props.doc._id) {
           values._id = this.props.doc._id;
 
@@ -145,7 +147,7 @@ class DocumentModal extends React.Component {
                 getValueFromEvent: this.normSelect,
                 rules: [{ required: true, message: '从属语言必须填写' }],
                 initialValue:  doc.language || this.props.lang[0] || ''
-              })( <Select mode="tags">
+              })(<Select mode="tags">
                     {this.initLangs()}
                   </Select>)}
             </FormItem>

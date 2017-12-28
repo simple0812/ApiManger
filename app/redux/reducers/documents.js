@@ -24,10 +24,12 @@ function modifySelectedApi(state, xid) {
   if(xApi.parent_id == 0) {
     xParent = _.find(state.doc, each => each._id == xApi.document_id);
   } else {
-    xParent =  _.find(state.doc, each => each._id == xApi.parent_id);
+    xParent = _.find(state.doc, each => each._id == xApi.parent_id);
   }
+
+  console.log('modifySelectedApi', xApi);
   state.api = xApi ;
-  state.apiPrentNode = xParent || {};
+  state.prentNode = xParent || {};
 }
 
 function documents(state = initialState, action={}) {

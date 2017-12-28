@@ -1,7 +1,7 @@
 import { takeLatest, takeEvery, select, put, call, fork, take, all } from 'redux-saga/effects';
 import { getDocs, updateDoc, createDoc, setShowableDocs} from './document';
 import { getApis, updateApi, createApi, searchApis } from './api';
-import { getLanguages, updateLanguages } from './language';
+import { getLanguages, updateLanguages, updateSingleLanguage } from './language';
 import { Api, Document } from '../../server/models/';
 
 
@@ -30,5 +30,6 @@ export default function* rootSaga() {
 
     takeLatest('REQ_GET_LANGUAGES', getLanguages),
     takeLatest('REQ_UPDATE_LANGUAGES', updateLanguages),
+    takeLatest('REQ_UPDATE_SINGLE_LANGUAGE', updateSingleLanguage),
   ]);
 }
