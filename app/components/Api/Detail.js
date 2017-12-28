@@ -15,15 +15,15 @@ class Detail extends React.Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    
+    console.log('detail nextProps====>', nextProps, this.props)
   }
 
   componentWillMount() {
-    console.log('componentWillMount', this.props.location);
+    console.log('componentWillMount', this.props.location,  this.props);
   }
 
   componetWillUpdate() {
-    console.log('componentWillMount', this.props.location);
+    console.log('componetWillUpdate', this.props.location, this.props);
   }
 
   getVersionStatus = (status) => {
@@ -116,6 +116,7 @@ class Detail extends React.Component {
 }
 
 function mapStateToProps(state) {
+  console.log('detail state ====> ',  state)
   return {
     docs: state.documents.docs || [],
     api:state.documents.api || {},

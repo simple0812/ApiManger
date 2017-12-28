@@ -143,14 +143,17 @@ class Main extends React.Component {
     case 'EDIT_DOC': 
       if(data.item.table_name == 'Document')
         this.setState({docModalStatus: true, doc: data.item});
-      else if(data.item.type == 'api')
+      else if(data.item.type == 'api'){
         this.setState({apiModalStatus: true, api: data.item, parentNode:data.item.parentNode || {}});
+        this.navToEdit(data.item, data.item.parentNode);
+      }
       else if(data.item.type == 'group') 
         this.setState({groupModalStatus: true, api: data.item, parentNode: data.item.parentNode || {}});
       break;
     case 'ADD_API': 
       this.setState({apiModalStatus: true, api: {}, parentNode: data.item});
       this.decideReqGetApisOrNot(data.item);
+      this.navToEdit({}, data.item);
       break;
     case 'ADD_GROUP': 
       this.setState({groupModalStatus: true,api: {}, parentNode: data.item});
@@ -211,14 +214,29 @@ class Main extends React.Component {
       parentNode: evt.node.props.dataRef.parentNode || evt.node.props.parent || {}
     });
 
-    var pt = '/detail/' + evt.node.props.dataRef._id;
+    var pt = '/detail'
     if(pt != this.props.location.pathname)
       this.props.history.push(pt);
+
     this.props.dispatch({
       type:'SHOW_DETAIL', 
       payload: {
         api: evt.node.props.dataRef,
         parentNode: evt.node.props.dataRef.parentNode || evt.node.props.parent || {}
+      }
+    })
+  }
+
+  navToEdit =(api, parentNode) => {
+    var pt = '/edit'
+    if(pt != this.props.location.pathname)
+      this.props.history.push(pt);
+
+    this.props.dispatch({
+      type:'SHOW_DETAIL', 
+      payload: {
+        api: api,
+        parentNode: parentNode || {}
       }
     })
   }
@@ -403,13 +421,7 @@ class Main extends React.Component {
         </GroupModal>
         <div className='main-container'>
           {
-            this.state.apiModalStatus 
-            ? <EditModal ref='addModal' 
-              visible={true} 
-              api={this.state.api} 
-              parentNode={this.state.parentNode}
-              onClose={this.handleClose} /> 
-            : this.props.children
+            this.props.children
           }
         </div>
       </div>

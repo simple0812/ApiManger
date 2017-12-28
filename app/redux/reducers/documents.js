@@ -47,7 +47,7 @@ function documents(state = initialState, action={}) {
     return p;
 
   case 'UPDATE_API_SUCCESS':
-    console.log('UPDATE_API_SUCCESS', action.payload._id);
+    console.log('UPDATE_API_SUCCESS', action.payload);
     var p = {...state};
     var x = p.docs.find(each => each._id == action.payload._id);
     if(x) {

@@ -4,7 +4,6 @@ import { HashRouter as Router, Route, Switch, withRouter } from 'react-router-do
 import createHistory from 'history/createHashHistory';
 import configureStore from './store/configureStore';
 import rootSaga from './redux/sagas/';
-import Main from './components/Main';
 import Search from './components/Api/Search';
 import Detail from './components/Api/Detail';
 import EditModal from './components/Api/EditModal';
@@ -32,10 +31,11 @@ export default class App extends Component {
       <Provider store={store}>
         <Router>
           <Switch>
-            <RouteWithLayout exact  layout={PublicLayout} path="/" component={Main}/>
+            <RouteWithLayout exact  layout={PublicLayout} path="/" component={Detail}/>
+            <RouteWithLayout exact  layout={PublicLayout} path="/edit" component={EditModal}/>
             <RouteWithLayout exact  layout={PublicLayout} path="/settings" component={Settings}/>
             <RouteWithLayout exact  layout={PublicLayout} path="/search/:name" component={Search}/>
-            <RouteWithLayout exact  layout={PublicLayout} path="/detail/:id" component={Detail}/>
+            <RouteWithLayout layout={PublicLayout} path="/detail" component={Detail}/>
             <RouteWithLayout exact  layout={PublicLayout} path="/api/:action/:id" component={EditModal}/>
           </Switch>
         </Router>

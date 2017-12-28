@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import { Select, Form, Input, Radio, Button, Modal, Row, Col } from 'antd';
 import PropTyeps from 'prop-types';
 import Compatibility from '../Compatibility/';
+import { withRouter, browserHistory } from 'react-router'
 
 import './less/edit.less';
 import 'react-mde/lib/styles/css/react-mde-all.css';
@@ -61,7 +62,6 @@ class EditModal extends React.Component {
     this.props.form.validateFieldsAndScroll((err,values)=>{  
       console.log('handleSubmit', values)
       if(!err){  
-        this.props.onClose();
         this.props.form.resetFields();//清空提交的表单 
         console.log(values, this.props.api); 
         values.type = 'api';
@@ -81,24 +81,20 @@ class EditModal extends React.Component {
 
           this.props.dispatch({type:'REQ_CREATE_API', payload: values});
         }
-      }  
+      }
+
+      this.handleClose();
     })  
-  }  
+  } 
 
   handleClose = () => {  
-    this.props.onClose(); 
+    // this.props.onClose(); 
+    var pt = '/detail/' + Math.random();
+    if(pt != this.props.location.pathname)
+      this.props.history.push(pt);
   } 
 
   handleChange =(evt)=> {
-    // console.log('x', $('#mdEditorArea').get(0).selectionEnd, $('#mdEditorArea').get(0).selectionStart)
-    // if(evt.text.slice(-1) == ' ') {
-    //   console.log('true');
-    // } else {
-    //   setTimeout(function() {
-    //     $('#mdEditorArea').val(evt.text + '')
-    //     setCursorPosition($('#mdEditorArea').get(0), evt.text.length+1)
-    //   },0)
-    // }
   }
 
   normFile = (e) => {
@@ -286,7 +282,7 @@ class EditModal extends React.Component {
               <Col span={4}></Col>
               <Col span={6}>
                 <Button className="save" onClick={this.handleSubmit} type="primary">保存</Button>
-                <Button className="cancel" onClick={this.props.onClose}>取消</Button>
+                <Button className="cancel" onClick={this.handleClose}>取消</Button>
               </Col>
             </Row>
           </Form>
@@ -295,12 +291,14 @@ class EditModal extends React.Component {
   }
 }
 
-// export default Form.create()(EditModal);
 function mapStateToProps(state) {
-  console.log('editmodel state===>', state);
+  console.log('detail state ====> ',  state)
   return {
+    docs: state.documents.docs || [],
+    api:state.documents.api || {},
+    parentNode:state.documents.parentNode || {},
   }
 }
 
-export default connect(mapStateToProps)(Form.create()(EditModal));
+export default withRouter(connect(mapStateToProps)(Form.create()(EditModal)));
 
