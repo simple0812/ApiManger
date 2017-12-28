@@ -25,7 +25,7 @@ export default class DocumentTree extends React.Component {
       if(cNodes.length == 0) return;
       return cNodes.map((item) => {
         return <TreeNode   
-          isLeaf={item.type == 'api'} 
+          isLeaf={this.props.checkable} 
           title={this.wrapperWithMenuTrigger(item, parent)} 
           key={item._id} 
           dataRef={item} >
@@ -92,7 +92,8 @@ export default class DocumentTree extends React.Component {
   }
   render() {
     return (
-      <Tree checkable={this.props.checkable} loadData={this.props.onLoadData} 
+      <Tree checkable={this.props.checkable} 
+        loadData={this.props.onLoadData} 
         autoExpandParent={false}
         checkedKeys = {this.props.checkedKeys}
         expandedKeys = {this.props.expandedKeys}

@@ -6,6 +6,7 @@ var path = require('path');
 var fs = require('fs');
 const uuidv1 = require('uuid/v1');
 import $ from 'jquery';
+import _ from 'lodash';
 
 const FormItem = Form.Item;
 const Option = Select.Option;
@@ -14,7 +15,9 @@ class DocumentModal extends React.Component {
 
   constructor(props) {
     super(props);
-    this.state = {};
+    this.state = {
+      value:''
+    };
   }
 
   componentWillMount() {
@@ -82,6 +85,10 @@ class DocumentModal extends React.Component {
     return e.file ? e.file.path : '';
   }
 
+  normSelect = (e) => {
+    return _.last(e);
+  }
+
   normalizeAll = () => {
   }
 
@@ -135,9 +142,10 @@ class DocumentModal extends React.Component {
               {...formItemLayout}
             >
               {getFieldDecorator('language', {
+                getValueFromEvent: this.normSelect,
                 rules: [{ required: true, message: '从属语言必须填写' }],
                 initialValue:  doc.language || this.props.lang[0] || ''
-              })( <Select>
+              })( <Select mode="tags">
                     {this.initLangs()}
                   </Select>)}
             </FormItem>

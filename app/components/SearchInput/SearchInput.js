@@ -81,7 +81,7 @@ class SearchInput extends React.Component {
           onChange={_.throttle(this.handleChange, 500)}>
           {this.renderCtrl()}
         </Select>
-        {this.props.apis.length == 0 && this.state.isSearching &&
+        {this.props.apis.length == 0 && this.state.isSearching && this.state.value &&
         <div style={{width:180,background:'white', position:'absolute', top:30,
           textAlign:'center', zIndex:99, borderRadius:3,
           paddingTop:5,paddingBottom:5}}>
