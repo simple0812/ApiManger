@@ -50,7 +50,7 @@ class Detail extends React.Component {
   }
 
   handleTagClick = (tag) => {
-    console.log('serch', tag)
+    console.log('search', tag)
     tag.document_id = this.props.api.document_id;
     this.props.dispatch({type:'REQ_SEARCH_APIS', payload:tag});
     this.props.history.push('/search/' + (tag.name || ''))
@@ -135,5 +135,4 @@ function mapStateToProps(state) {
   }
 }
 
-// export default connect(mapStateToProps)(Detail);
 export default withRouter(connect(mapStateToProps)(Detail));
