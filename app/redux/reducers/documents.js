@@ -85,7 +85,7 @@ function documents(state = initialState, action={}) {
     var x = p.docs.find(each => each._id == action.payload._id);
     if(x) {
       for(var key in action.payload) {
-        if(x.hasOwnProperty(key)) {
+        if(x.hasOwnProperty(key) || key == 'hide') {
           x[key] = action.payload[key];
         }
       }
