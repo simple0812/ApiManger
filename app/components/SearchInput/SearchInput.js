@@ -95,6 +95,7 @@ class SearchInput extends React.Component {
 
 function mapStateToProps(state) {
   var x = state.documents.searchApis || [];
+  x = _.uniqBy(x, 'name');
   return { apis: x.splice(0,10) }
 }
 

@@ -36,7 +36,6 @@ export default class App extends Component {
             <RouteWithLayout exact  layout={PublicLayout} path="/settings" component={Settings}/>
             <RouteWithLayout exact  layout={PublicLayout} path="/search/:name" component={Search}/>
             <RouteWithLayout layout={PublicLayout} path="/detail" component={Detail}/>
-            <RouteWithLayout exact  layout={PublicLayout} path="/api/:action/:id" component={EditModal}/>
           </Switch>
         </Router>
       </Provider>

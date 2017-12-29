@@ -1,4 +1,5 @@
 import _ from 'lodash';
+import { select, put, call, fork, take, all } from 'redux-saga/effects';
 
 const initialState  = {
   docs :[],
@@ -57,8 +58,11 @@ function documents(state = initialState, action={}) {
         }
       }
     }
+
+    p.api ={};
+    p.parentNode ={};
     
-    modifySelectedApi(p, action.payload._id);
+    //modifySelectedApi(p, action.payload._id);
     return p;
     
   case 'CREATE_API_SUCCESS':
@@ -99,11 +103,19 @@ function documents(state = initialState, action={}) {
     delRecursion(p, action.payload);
     return p;
   case 'SHOW_DETAIL':
-    console.log('SHOW_DETAIL')
     var xid = action.payload;
     var p ={...state, ...action.payload }
+    return p;
 
-    //modifySelectedApi(p, xid);
+  case 'SHOW_DETAILX':
+    console.log('SHOW_DETAILxxxzzzzaaaa')
+    var p ={...state};
+    var apiId = action.payload.apiId;
+    var parentId = action.payload.parentId;
+    p.api = _.find(p, each => each._id == apiId) || {};
+    p.parentNode = _.find(p, each => each._id == parentId) || {};
+
+    console.log('xxxxxxxxxxxxxxxxx', p)
     return p;
 
   case 'SEARCH_APIS':

@@ -8,6 +8,7 @@ import { getName } from '../common';
 import { Tag } from 'antd';
 import './less/detail.less';
 import eye from './images/hint.png';
+import _ from 'lodash';
 
 class Detail extends React.Component {
   constructor(props) {
@@ -19,7 +20,15 @@ class Detail extends React.Component {
   }
 
   componentWillMount() {
-    console.log('componentWillMount', this.props.location,  this.props);
+    console.log('componentWillMount=======>*************', this.props.api._id, this.props.parent._id);
+    // this.props.dispatch({type:'SHOW_DETAILX', payload:{}});
+    // this.props.dispatch({
+    //   type:'SHOW_DETAILX', 
+    //   payload: {
+    //     apiId: this.props.api._id,
+    //     parentId: this.props.parent._id
+    //   }
+    // })
   }
 
   componetWillUpdate() {
@@ -116,7 +125,9 @@ class Detail extends React.Component {
 }
 
 function mapStateToProps(state) {
-  console.log('detail state ====> ',  state)
+  var api = state.documents.api || {};
+  var xapi = state.documents.docs.find(each => each._id == api._id);
+  console.log('detail state ====> ',  api, xapi)
   return {
     docs: state.documents.docs || [],
     api:state.documents.api || {},
@@ -124,4 +135,5 @@ function mapStateToProps(state) {
   }
 }
 
+// export default connect(mapStateToProps)(Detail);
 export default withRouter(connect(mapStateToProps)(Detail));

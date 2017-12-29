@@ -68,7 +68,7 @@ class EditModal extends React.Component {
         // values.tags = values.tags.split(' ').filter(each => each);
         values.code = values.code.text || '';
         if(this.props.api._id) {
-          values._id = this.props.api._id;
+          values.random = Math.random();
           this.props.dispatch({type:'REQ_UPDATE_API', payload: {...this.props.api, ...values}});
         } else {
           if(this.props.parentNode.table_name == 'Document') {
