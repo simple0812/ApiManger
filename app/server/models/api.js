@@ -46,21 +46,40 @@ export default class Api extends BaseModel {
     ancestors = ancestors || [];
     if(parentId == 0) return ancestors;
     var _this = this;
-    return xdb.findOneAsync({_id: parentId, table_name: this.name}).then(api => {
-
-      if(api) {
-        ancestors.unshift(api);
-        if(api.parent_id == 0) {
-          return Promise.resolve(ancestors);
-        }
-
-        return _this.findAncestors(api.parent_id, ancestors, xdb);
-      } else {
-        return Promise.resolve(ancestors);
-      }
-      
+    return xdb.findAsync({table_name: 'Api'}).then(apis => {
+      console.log('---------------------', apis);
+      _this.handleFindAncestors(parentId, apis, ancestors);
+      return Promise.resolve(ancestors);
     });
   }
+
+  static handleFindAncestors(parentId, apis, ancestors) {
+    var p = apis.find(each => each._id == parentId);
+    if(p) {
+      ancestors.unshift(p);
+      if(p.parent_id != 0 ){
+        this.handleFindAncestors(p.parent_id, apis, ancestors);
+      }
+    }
+  }
+  // static findAncestors(parentId, ancestors, xdb) {
+  //   ancestors = ancestors || [];
+  //   if(parentId == 0) return ancestors;
+  //   var _this = this;
+  //   return xdb.findOneAsync({_id: parentId, table_name:'Api'}).then(api => {
+  //     if(api) {
+  //       ancestors.unshift(api);
+  //       if(api.parent_id == 0) {
+  //         return Promise.resolve(ancestors);
+  //       }
+
+  //       return _this.findAncestors(api.parent_id, ancestors, xdb);
+  //     } else {
+  //       return Promise.resolve(ancestors);
+  //     }
+      
+  //   });
+  // }
 
   static async findAncestorsIncludeDoc(api) {
     var doc = await db.findOneAsync({_id: api.document_id, table_name:'Document'});

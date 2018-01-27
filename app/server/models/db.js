@@ -51,28 +51,54 @@ async function initDb() {
 }
 
 function connectDb(dbName) {
-  if(myCache.get(dbName)) {
-    console.log(`connect db ${dbName} from cache`)
-    var pdb = myCache.get(dbName);
-    // return pdb.loadDatabaseAsync().then(() => {
-    //   return Promise.resolve(pdb);
-    // });
-    return Promise.resolve(pdb);
-  } else {
-    console.log(`try to connect ${dbName} db`, myCache.get(dbName))
-  }
-
-  var x = new Datastore({ filename: path.join(process.cwd(), 'data', dbName + '.db')});
+  var x = new Datastore({ 
+    filename: path.join(process.cwd(), 'data', dbName + '.db'),
+    autoload:true,
+    onload:(err) => {
+      if(err)
+        console.log(`connect db ${dbName} error`, err.message)
+    }
+  });
 
   var xdb = Promise.promisifyAll(x)
-  return xdb.loadDatabaseAsync().then(() => {
-    myCache.set(dbName, xdb);
-    return Promise.resolve(xdb);
-  }).catch(err => {
-    console.error(`connect db ${dbName} error`, err.message);
-    return Promise.resolve();
-  });
+  return Promise.resolve(xdb);
 }
+
+// function connectDb(dbName) {
+//   var x = new Datastore({ filename: path.join(process.cwd(), 'data', dbName + '.db')});
+
+//   var xdb = Promise.promisifyAll(x)
+//   return xdb.loadDatabaseAsync().then(() => {
+//     return Promise.resolve(xdb);
+//   }).catch(err => {
+//     console.error(`connect db ${dbName} error`, err.message);
+//     return Promise.resolve();
+//   });
+// }
+
+// function connectDb(dbName) {
+//   if(myCache.get(dbName)) {
+//     console.log(`connect db ${dbName} from cache`)
+//     var pdb = myCache.get(dbName);
+//     // return pdb.loadDatabaseAsync().then(() => {
+//     //   return Promise.resolve(pdb);
+//     // });
+//     return Promise.resolve(pdb);
+//   } else {
+//     console.log(`try to connect ${dbName} db`, myCache.get(dbName))
+//   }
+
+//   var x = new Datastore({ filename: path.join(process.cwd(), 'data', dbName + '.db')});
+
+//   var xdb = Promise.promisifyAll(x)
+//   return xdb.loadDatabaseAsync().then(() => {
+//     myCache.set(dbName, xdb);
+//     return Promise.resolve(xdb);
+//   }).catch(err => {
+//     console.error(`connect db ${dbName} error`, err.message);
+//     return Promise.resolve();
+//   });
+// }
 
 async function connectTempDb(filename) {
   if(tempDbCache[filename]) return tempDbCache[filename];
