@@ -104,7 +104,7 @@ class DocumentModal extends React.Component {
     let doc = this.props.form.getFieldsValue();
     if(!doc || !doc.icon) return <span></span>;
     var pathname = doc.icon;
-    if(doc.icon.indexOf('/assets/') == -1 && doc.icon.indexOf('\\assets\\') == -1) {
+    if(doc.icon.indexOf('/') == -1 && doc.icon.indexOf('\\') == -1) {
       pathname = path.join(process.cwd(), 'assets', doc.icon)
     }
     
