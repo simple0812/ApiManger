@@ -16,23 +16,12 @@ class Detail extends React.Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    console.log('detail nextProps====>', nextProps, this.props)
   }
 
   componentWillMount() {
-    console.log('componentWillMount=======>*************', this.props.api._id, this.props.parent._id);
-    // this.props.dispatch({type:'SHOW_DETAILX', payload:{}});
-    // this.props.dispatch({
-    //   type:'SHOW_DETAILX', 
-    //   payload: {
-    //     apiId: this.props.api._id,
-    //     parentId: this.props.parent._id
-    //   }
-    // })
   }
 
   componetWillUpdate() {
-    console.log('componetWillUpdate', this.props.location, this.props);
   }
 
   getVersionStatus = (status) => {
@@ -41,6 +30,7 @@ class Detail extends React.Component {
     if (status === 2) return <a href="javascript:void(0)" onClick={() => { this.handleTagClick({ version_status: status, name: 'Candidate Recommendation' }); }}>Candidate Recommendation</a>;
     return <a href="javascript:void(0)" onClick={() => { this.handleTagClick({ version_status: status, name: 'Recommendation' }); }}>Recommendation</a>;
   }
+  
   getStatus = (status) => {
     if(!this.props.api._id) return;
     status = status || 1;

@@ -46,9 +46,10 @@ class DocumentModal extends React.Component {
         console.log(values, this.props.doc._id); 
         //let src = $('#doc_icon').attr('src');
         let src = values.icon;
-        console.log('src', src);
 
-        if(values.icon.indexOf('/assets/') > -1 || values.icon.indexOf('\\assets\\') > -1) {
+        //需要判断icon是否被修改了 如果被修改了则包含全路径 否则只有文件名
+        if(values.icon.indexOf('/') > -1 || values.icon.indexOf('\\') > -1) {
+          console.log('icon modify')
           var filename = uuidv1() + path.extname(src);
           values.icon =  filename;
 

@@ -47,13 +47,18 @@ export default class Api extends BaseModel {
     if(parentId == 0) return ancestors;
     var _this = this;
     return xdb.findOneAsync({_id: parentId, table_name: this.name}).then(api => {
-      ancestors.unshift(api);
 
-      if(api.parent_id == 0) {
+      if(api) {
+        ancestors.unshift(api);
+        if(api.parent_id == 0) {
+          return Promise.resolve(ancestors);
+        }
+
+        return _this.findAncestors(api.parent_id, ancestors, xdb);
+      } else {
         return Promise.resolve(ancestors);
       }
-
-      return _this.findAncestors(api.parent_id, ancestors, xdb);
+      
     });
   }
 
@@ -74,7 +79,6 @@ export default class Api extends BaseModel {
   }
 
   static async findInSpecDb(conditions, id) {
-    console.log('findInSpecDb', id, conditions );
     var xdb = await connectDb(id);
     await xdb.loadDatabaseAsync();
     return xdb.findAsync(conditions);
@@ -83,7 +87,6 @@ export default class Api extends BaseModel {
   //1.如果conditions包含document_id 则直接再对应的document文件查找
   //2.如果不包含document_id 则先扫描data.db 或者所有可以显示的document 然后再查找
   static async retrieve(conditions) {
-    console.log('api retrieve conditions', conditions);
     conditions = conditions || {};
     var p = {...conditions, table_name: this.name}
     var docIds = [];
@@ -91,7 +94,7 @@ export default class Api extends BaseModel {
       docIds.push(conditions.document_id);
     } else {
       var docs = await db.findAsync({table_name:'Document', $or:[{hide:false}, { hide: { $exists: false } }]});
-      docIds = docs.map(each => each._id);
+      docIds = (docs || []).map(each => each._id);
     }
 
     var xapis = await Promise.map(docIds, this.findInSpecDb.bind(this, p));
